@@ -231,6 +231,33 @@ export function useSubscription(userId: string | null) {
     return true;
   }, [familyGroup]);
 
+  // Create Stripe Checkout Session
+  const createCheckoutSession = useCallback(async (priceId: string, userEmail?: string) => {
+    if (!userId) {
+      console.error('No userId provided for checkout');
+      return null;
+    }
+
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId, userId, userEmail }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create checkout session');
+      }
+
+      const { url } = await response.json();
+      return url;
+    } catch (err) {
+      console.error('Error creating checkout session:', err);
+      return null;
+    }
+  }, [userId]);
+
   // Derived state
   const isPro = subscription?.planType === 'pro' || subscription?.planType === 'family';
   const isFamily = subscription?.planType === 'family';
@@ -250,6 +277,7 @@ export function useSubscription(userId: string | null) {
     isFamily,
     isAnnual,
     upgradePlan,
+    createCheckoutSession,
     createFamilyGroup,
     inviteFamilyMember,
     refresh: () => {

@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useTranslation } from '../i18n';
+import { useAuth } from '../hooks/useAuth';
+import { useSubscription } from '../hooks/useSubscription';
 
 interface Props {
   open: boolean;
@@ -11,6 +13,9 @@ interface Props {
 export function PricingView({ open, onClose, isPro }: Props) {
   const { t, language } = useTranslation();
   const [isAnnual, setIsAnnual] = useState(false);
+  const { user } = useAuth();
+  const { createCheckoutSession } = useSubscription(user?.id || null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -148,7 +153,7 @@ export function PricingView({ open, onClose, isPro }: Props) {
                 <div className="mb-8">
                   <span className="text-4xl font-extrabold text-on-surface">
                     {isAnnual && plan.key !== 'basic'
-                      ? (plan.key === 'vip' ? '$499' : '$999')
+                      ? (plan.key === 'vip' ? '$960' : '$1,540')
                       : planData.price}
                   </span>
                   <span className="text-on-surface-variant font-semibold">
@@ -158,12 +163,12 @@ export function PricingView({ open, onClose, isPro }: Props) {
                   </span>
                   {isAnnual && plan.key !== 'basic' && (
                     <p className="text-xs text-tertiary font-medium mt-1">
-                      {language === 'es' ? '¡Ahorra 2 meses!' : 'Save 2 months!'}
+                      {language === 'es' ? '¡Ahorra 1 mes!' : 'Save 1 month!'}
                     </p>
                   )}
                   {!isAnnual && plan.key !== 'basic' && (
                     <p className="text-xs text-on-surface-variant/60 font-medium mt-1">
-                      {language === 'es' ? 'o $' + (plan.key === 'vip' ? '499' : '999') + '/año (-16%)' : 'or $' + (plan.key === 'vip' ? '499' : '999') + '/year (-16%)'}
+                      {language === 'es' ? 'o $' + (plan.key === 'vip' ? '960' : '1,540') + '/año (-10%)' : 'or $' + (plan.key === 'vip' ? '960' : '1,540') + '/year (-10%)'}
                     </p>
                   )}
                 </div>
@@ -183,21 +188,55 @@ export function PricingView({ open, onClose, isPro }: Props) {
                 </ul>
 
                 <button
-                  disabled={isCurrentPlan}
-                  onClick={() => {
-                    if (!isCurrentPlan && plan.key === 'vip') {
-                      alert(language === 'es' ? '¡Próximamente! Integración con pasarela de pagos.' : 'Coming soon! Payment gateway integration.');
+                  disabled={isCurrentPlan || isLoading}
+                  onClick={async () => {
+                    if (isCurrentPlan || plan.key === 'basic') return;
+                    
+                    if (!user) {
+                      alert(language === 'es' ? 'Por favor inicia sesión para suscribirte' : 'Please sign in to subscribe');
+                      return;
+                    }
+                    
+                    setIsLoading(true);
+                    
+                    const priceId = isAnnual
+                      ? (plan.key === 'vip' 
+                          ? import.meta.env.VITE_STRIPE_PRICE_VIP_ANNUAL 
+                          : import.meta.env.VITE_STRIPE_PRICE_PRO_ANNUAL)
+                      : (plan.key === 'vip'
+                          ? import.meta.env.VITE_STRIPE_PRICE_VIP_MONTHLY
+                          : import.meta.env.VITE_STRIPE_PRICE_PRO_MONTHLY);
+                    
+                    if (!priceId) {
+                      alert(language === 'es' ? 'Error: Precio no configurado' : 'Error: Price not configured');
+                      setIsLoading(false);
+                      return;
+                    }
+                    
+                    const checkoutUrl = await createCheckoutSession(priceId, user.email);
+                    
+                    if (checkoutUrl) {
+                      window.location.href = checkoutUrl;
+                    } else {
+                      alert(language === 'es' ? 'Error al iniciar el pago. Intenta de nuevo.' : 'Error starting payment. Please try again.');
+                      setIsLoading(false);
                     }
                   }}
                   className={`w-full py-4 rounded-full font-bold transition-all active:scale-95 ${
-                    plan.highlighted
+                    isLoading
+                      ? 'bg-surface-container-highest text-on-surface-variant cursor-wait'
+                      : plan.highlighted
                       ? 'bg-tertiary text-on-tertiary shadow-lg hover:scale-105'
                       : isCurrentPlan
                       ? 'bg-surface-container-highest text-on-surface-variant cursor-not-allowed'
                       : 'bg-primary text-on-primary hover:shadow-xl'
                   }`}
                 >
-                  {isCurrentPlan ? planData.ctaCurrent : planData.cta}
+                  {isLoading 
+                    ? (language === 'es' ? 'Cargando...' : 'Loading...')
+                    : isCurrentPlan 
+                      ? planData.ctaCurrent 
+                      : planData.cta}
                 </button>
               </div>
             );
