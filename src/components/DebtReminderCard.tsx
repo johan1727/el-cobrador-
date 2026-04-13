@@ -21,7 +21,7 @@ export function DebtReminderCard({ reminder, onMarkPaid, onMarkForgiven, onSnooz
     return { stage: 3, emoji: '🤔', color: 'secondary', title: t.reminders?.day3Title || 'Primer seguimiento' };
   };
 
-  const { stage, emoji, color, title } = getStage();
+  const { stage: _stage, emoji, color, title } = getStage();
 
   const colorClasses = {
     secondary: 'bg-secondary-container text-on-secondary-container border-secondary',

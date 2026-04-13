@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useTranslation } from '../i18n';
+import { useEffect } from 'react';
 
 interface Props {
   open: boolean;
