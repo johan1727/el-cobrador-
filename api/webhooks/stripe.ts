@@ -97,12 +97,12 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
   const priceId = subscription.items.data[0].price.id;
   
-  // Mapear Price IDs a planes
+  // Mapear Price IDs a planes desde variables de entorno
   const priceToPlan: Record<string, 'vip' | 'pro'> = {
-    'price_1TLnDGE8s9f9Vj9DxFjYHI5r': 'vip',      // Amigos VIP mensual
-    'price_1TLnF5E8s9f9Vj9DvSWnEARF': 'vip',      // Amigos VIP anual
-    'price_1TLnDlE8s9f9Vj9D5aLb8ZoV': 'pro',      // Cobrador Pro mensual
-    'price_1TLnG1E8s9f9Vj9DnhnKCbEr': 'pro',      // Cobrador Pro anual
+    [process.env.STRIPE_PRICE_VIP_MONTHLY!]: 'vip',
+    [process.env.STRIPE_PRICE_VIP_ANNUAL!]: 'vip',
+    [process.env.STRIPE_PRICE_PRO_MONTHLY!]: 'pro',
+    [process.env.STRIPE_PRICE_PRO_ANNUAL!]: 'pro',
   };
   
   // Determinar plan: Price ID tiene prioridad, luego client_reference_id
