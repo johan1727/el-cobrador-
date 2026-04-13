@@ -138,7 +138,7 @@ export const translations = {
         },
         vip: {
           name: 'Amigos VIP',
-          price: '$79',
+          price: '$799',
           period: '/mes',
           description: 'Automatiza la vergüenza de cobrar.',
           popular: 'Más popular',
@@ -148,7 +148,7 @@ export const translations = {
         },
         pro: {
           name: 'Cobrador Pro',
-          price: '$129',
+          price: '$1,299',
           period: '/mes',
           description: 'Para el que maneja el dinero del grupo.',
           features: ['Todo lo de Amigos VIP', 'Bot de llamadas IA', 'Reportes legales PDF', 'Multi-divisas Pro'],
