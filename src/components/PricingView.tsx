@@ -150,7 +150,7 @@ export function PricingView({ open, onClose, isPro }: Props) {
                 <div className="mb-8">
                   <span className="text-4xl font-extrabold text-on-surface">
                     {isAnnual && plan.key !== 'basic'
-                      ? (plan.key === 'vip' ? '$7,999' : '$12,999')
+                      ? (plan.key === 'vip' ? '$799' : '$1,299')
                       : planData.price}
                   </span>
                   <span className="text-on-surface-variant font-semibold">
@@ -165,7 +165,7 @@ export function PricingView({ open, onClose, isPro }: Props) {
                   )}
                   {!isAnnual && plan.key !== 'basic' && (
                     <p className="text-xs text-on-surface-variant/60 font-medium mt-1">
-                      {language === 'es' ? 'o $' + (plan.key === 'vip' ? '7,999' : '12,999') + '/año (ahorra ~17%)' : 'or $' + (plan.key === 'vip' ? '7,999' : '12,999') + '/year (save ~17%)'}
+                      {language === 'es' ? 'o $' + (plan.key === 'vip' ? '799' : '1,299') + '/año (ahorra ~17%)' : 'or $' + (plan.key === 'vip' ? '799' : '1,299') + '/year (save ~17%)'}
                     </p>
                   )}
                 </div>

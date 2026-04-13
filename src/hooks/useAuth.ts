@@ -68,10 +68,12 @@ export function useAuth() {
     }
 
     try {
+      // Usar VITE_APP_URL si está disponible, sino window.location.origin
+      const redirectUrl = import.meta.env.VITE_APP_URL || window.location.origin;
       const { data, error } = await supabase!.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin,
+          redirectTo: redirectUrl,
         },
       });
 
