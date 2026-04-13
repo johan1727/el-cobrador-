@@ -86,15 +86,27 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   }
   
   // Parsear client_reference_id: formato "userId_plan"
-  const [userId, planType] = clientRef.split('_') as [string, 'vip' | 'pro'];
+  const [userId, planFromRef] = clientRef.split('_') as [string, 'vip' | 'pro'];
   
-  if (!userId || !planType) {
-    console.error('Invalid client_reference_id format:', clientRef);
+  if (!userId) {
+    console.error('Missing userId in client_reference_id:', clientRef);
     return;
   }
   
-  // Obtener detalles de la suscripción para el billing cycle
+  // Obtener detalles de la suscripción
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+  const priceId = subscription.items.data[0].price.id;
+  
+  // Mapear Price IDs a planes
+  const priceToPlan: Record<string, 'vip' | 'pro'> = {
+    'price_1TLnDGE8s9f9Vj9DxFjYHI5r': 'vip',      // Amigos VIP mensual
+    'price_1TLnF5E8s9f9Vj9DvSWnEARF': 'vip',      // Amigos VIP anual
+    'price_1TLnDlE8s9f9Vj9D5aLb8ZoV': 'pro',      // Cobrador Pro mensual
+    'price_1TLnG1E8s9f9Vj9DnhnKCbEr': 'pro',      // Cobrador Pro anual
+  };
+  
+  // Determinar plan: Price ID tiene prioridad, luego client_reference_id
+  const planType = priceToPlan[priceId] || planFromRef || 'vip';
   const billingCycle = subscription.items.data[0].price.recurring?.interval === 'year' ? 'annual' : 'monthly';
 
   // Calcular fechas (Stripe devuelve timestamps en segundos)
