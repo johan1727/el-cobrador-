@@ -194,7 +194,7 @@ export function PricingView({ open, onClose, isPro }: Props) {
                       return;
                     }
                     
-                    // Stripe Payment Links directos
+                    // Stripe Payment Links directos con client_reference_id
                     const paymentLinks: Record<string, Record<string, string>> = {
                       vip: {
                         monthly: 'https://buy.stripe.com/cNicN57ER8T37HU0FtdnW00',
@@ -206,7 +206,10 @@ export function PricingView({ open, onClose, isPro }: Props) {
                       }
                     };
                     
-                    const link = paymentLinks[plan.key][isAnnual ? 'annual' : 'monthly'];
+                    const baseLink = paymentLinks[plan.key][isAnnual ? 'annual' : 'monthly'];
+                    // Pasar userId y plan como client_reference_id para el webhook
+                    const clientRef = `${user.id}_${plan.key}`;
+                    const link = `${baseLink}?client_reference_id=${encodeURIComponent(clientRef)}`;
                     window.open(link, '_blank');
                   }}
                   className={`w-full py-4 rounded-full font-bold transition-all active:scale-95 ${

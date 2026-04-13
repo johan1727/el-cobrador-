@@ -76,24 +76,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const { supabase } = await import('../../src/lib/supabase');
   
-  const userId = session.client_reference_id;
+  const clientRef = session.client_reference_id;
   const customerId = session.customer as string;
   const subscriptionId = session.subscription as string;
   
-  if (!userId || !subscriptionId) {
-    console.error('Missing userId or subscriptionId in session');
+  if (!clientRef || !subscriptionId) {
+    console.error('Missing client_reference_id or subscriptionId in session');
     return;
   }
   
-  // Obtener detalles de la suscripción
+  // Parsear client_reference_id: formato "userId_plan"
+  const [userId, planType] = clientRef.split('_') as [string, 'vip' | 'pro'];
+  
+  if (!userId || !planType) {
+    console.error('Invalid client_reference_id format:', clientRef);
+    return;
+  }
+  
+  // Obtener detalles de la suscripción para el billing cycle
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-  const priceId = subscription.items.data[0].price.id;
-  
-  // Determinar plan y ciclo
-  const vipMonthlyPrice = process.env.STRIPE_PRICE_VIP_MONTHLY;
-  const vipAnnualPrice = process.env.STRIPE_PRICE_VIP_ANNUAL;
-  
-  const planType = (priceId === vipMonthlyPrice || priceId === vipAnnualPrice) ? 'vip' : 'pro';
   const billingCycle = subscription.items.data[0].price.recurring?.interval === 'year' ? 'annual' : 'monthly';
 
   // Calcular fechas (Stripe devuelve timestamps en segundos)
@@ -107,8 +108,6 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   
   const { error } = await supabase.from('user_subscriptions').upsert({
     user_id: userId,
-    stripe_customer_id: customerId,
-    stripe_subscription_id: subscriptionId,
     plan_type: planType,
     billing_cycle: billingCycle,
     status: 'active',
