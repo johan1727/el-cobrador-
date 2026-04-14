@@ -3,6 +3,16 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+export const getAuthRedirectUrl = () => {
+  const configuredAppUrl = import.meta.env.VITE_APP_URL?.trim();
+
+  if (configuredAppUrl) {
+    return configuredAppUrl;
+  }
+
+  return `${window.location.origin}${window.location.pathname}`;
+};
+
 // Create client only if credentials exist
 export const supabase = supabaseUrl && supabaseKey 
   ? createClient(supabaseUrl, supabaseKey, {
@@ -10,7 +20,7 @@ export const supabase = supabaseUrl && supabaseKey
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
-        flowType: 'implicit',
+        flowType: 'pkce',
       },
     })
   : null;
@@ -22,7 +32,7 @@ export const isSupabaseConfigured = () => !!supabase;
 export const signInWithGoogle = async () => {
   if (!supabase) return { error: new Error('Supabase no configurado') };
   
-  const redirectUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+  const redirectUrl = getAuthRedirectUrl();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {

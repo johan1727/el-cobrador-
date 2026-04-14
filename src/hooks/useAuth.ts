@@ -1,5 +1,5 @@
 import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { getAuthRedirectUrl, supabase, isSupabaseConfigured } from '../lib/supabase';
 
 interface User {
   id: string;
@@ -36,6 +36,34 @@ const mapSessionUser = (sessionUser: {
       : undefined,
 });
 
+const AUTH_HASH_KEYS = ['access_token', 'expires_at', 'expires_in', 'provider_token', 'refresh_token', 'token_type', 'type'];
+const AUTH_SEARCH_KEYS = ['code', 'error', 'error_code', 'error_description'];
+
+const hasAuthCallbackParams = () => {
+  const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  const searchParams = new URLSearchParams(window.location.search);
+
+  return AUTH_HASH_KEYS.some((key) => hashParams.has(key)) || AUTH_SEARCH_KEYS.some((key) => searchParams.has(key));
+};
+
+const clearAuthCallbackParams = () => {
+  const url = new URL(window.location.href);
+  const hashParams = new URLSearchParams(url.hash.replace(/^#/, ''));
+
+  AUTH_SEARCH_KEYS.forEach((key) => {
+    url.searchParams.delete(key);
+  });
+
+  AUTH_HASH_KEYS.forEach((key) => {
+    hashParams.delete(key);
+  });
+
+  const nextHash = hashParams.toString();
+  url.hash = nextHash ? `#${nextHash}` : '';
+
+  window.history.replaceState({}, document.title, `${url.pathname}${url.search}${url.hash}`);
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -49,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const checkSession = async () => {
       try {
-        const hasAuthParams = window.location.hash.includes('access_token') || window.location.search.includes('code=');
+        const hasAuthParams = hasAuthCallbackParams();
         console.log('[auth] init', {
           hasHash: !!window.location.hash,
           hasSearch: !!window.location.search,
@@ -65,11 +93,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (session?.user) {
           console.log('[auth] hydrated session', session.user.email);
           setUser(mapSessionUser(session.user));
-          if (window.location.hash || window.location.search.includes('access_token') || window.location.search.includes('code=')) {
-            window.history.replaceState({}, document.title, window.location.pathname);
+          if (hasAuthParams) {
+            clearAuthCallbackParams();
           }
         } else {
           console.log('[auth] no session after init');
+          setUser(null);
         }
       } catch (error) {
         console.error('[auth] checkSession exception', error);
@@ -78,22 +107,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    const timer = window.setTimeout(checkSession, 500);
+    void checkSession();
 
     const { data: { subscription } } = supabase!.auth.onAuthStateChange((event, session) => {
       console.log('[auth] state change', event, !!session?.user);
-      if (event === 'SIGNED_IN' && session?.user) {
+      if (session?.user) {
         setUser(mapSessionUser(session.user));
-        if (window.location.hash || window.location.search.includes('access_token') || window.location.search.includes('code=')) {
-          window.history.replaceState({}, document.title, window.location.pathname);
+        if (hasAuthCallbackParams()) {
+          clearAuthCallbackParams();
         }
-      } else if (event === 'SIGNED_OUT') {
+      } else if (event === 'SIGNED_OUT' || event === 'INITIAL_SESSION') {
         setUser(null);
       }
+
+      setLoading(false);
     });
 
     return () => {
-      clearTimeout(timer);
       subscription.unsubscribe();
     };
   }, [isConfigured]);
@@ -104,7 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const redirectUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+      const redirectUrl = getAuthRedirectUrl();
       console.log('[auth] signInWithGoogle', { redirectUrl });
       const { data, error } = await supabase!.auth.signInWithOAuth({
         provider: 'google',

@@ -56,7 +56,7 @@ function AppContent() {
     FREE_DAILY_LIMIT
   } = useUsageLimit();
   const { playGenerate, playCopy, playShare, playFlip, playClick } = useSound();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { isPro: isProSubscription } = useSubscription(user?.id || null);
   const { t } = useTranslation();
   
@@ -151,7 +151,7 @@ function AppContent() {
         </div>
         <div className="flex items-center gap-3">
           {/* Login button - show when not authenticated */}
-          {!user && (
+          {!authLoading && !user && (
             <button 
               onClick={() => setShowSettings(true)}
               className="bg-primary text-on-primary px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:opacity-90 transition-opacity"
@@ -161,7 +161,7 @@ function AppContent() {
             </button>
           )}
           {/* User avatar when logged in */}
-          {user && (
+          {!authLoading && user && (
             <button 
               onClick={() => setShowSettings(true)}
               className="w-9 h-9 rounded-full overflow-hidden border-2 border-primary hover:opacity-80 transition-opacity"

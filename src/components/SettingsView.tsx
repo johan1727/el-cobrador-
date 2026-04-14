@@ -15,9 +15,10 @@ export function SettingsView({ onClose, isPro, onUpgrade }: Props) {
   const [soundEnabled, setSoundEnabled] = useState(false); // opt-in: false by default
   const [animationsEnabled, setAnimationsEnabled] = useState(true);
   const [loginLoading, setLoginLoading] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
-  const { user, signInWithGoogle, signOut, isConfigured } = useAuth();
+  const { user, signInWithGoogle, signOut, isConfigured, loading: authLoading } = useAuth();
 
   useEffect(() => {
     // Load settings
@@ -42,18 +43,31 @@ export function SettingsView({ onClose, isPro, onUpgrade }: Props) {
       return;
     }
 
-    setLoginLoading(true);
-    const { error } = await signInWithGoogle();
-    setLoginLoading(false);
+    try {
+      setLoginLoading(true);
+      const { error } = await signInWithGoogle();
 
-    if (error) {
-      console.error('Login error:', error);
-      alert((language === 'es' ? 'Error al iniciar sesión: ' : 'Login error: ') + error.message);
+      if (error) {
+        console.error('Login error:', error);
+        alert((language === 'es' ? 'Error al iniciar sesión: ' : 'Login error: ') + error.message);
+      }
+    } finally {
+      setLoginLoading(false);
     }
   };
 
   const handleLogout = async () => {
-    await signOut();
+    try {
+      setLogoutLoading(true);
+      const { error } = await signOut();
+
+      if (error) {
+        console.error('Logout error:', error);
+        alert((language === 'es' ? 'Error al cerrar sesión: ' : 'Logout error: ') + error.message);
+      }
+    } finally {
+      setLogoutLoading(false);
+    }
   };
 
   return (
@@ -127,10 +141,20 @@ export function SettingsView({ onClose, isPro, onUpgrade }: Props) {
                     </div>
                     <button
                       onClick={handleLogout}
+                      disabled={logoutLoading || authLoading}
                       className="mt-6 w-full py-3 px-4 bg-error-container text-on-error-container font-bold rounded-full hover:brightness-95 transition-all text-sm flex items-center justify-center gap-2"
                     >
-                      <span className="material-symbols-outlined">logout</span>
-                      {t.settings.logout}
+                      {logoutLoading ? (
+                        <>
+                          <span className="material-symbols-outlined animate-spin">refresh</span>
+                          {t.common.loading}
+                        </>
+                      ) : (
+                        <>
+                          <span className="material-symbols-outlined">logout</span>
+                          {t.settings.logout}
+                        </>
+                      )}
                     </button>
                   </div>
                 </>
@@ -146,10 +170,10 @@ export function SettingsView({ onClose, isPro, onUpgrade }: Props) {
                     </div>
                     <button
                       onClick={handleLogin}
-                      disabled={loginLoading}
+                      disabled={loginLoading || authLoading}
                       className="w-full max-w-sm bg-primary text-on-primary py-3 rounded-full font-bold flex items-center justify-center gap-2 disabled:opacity-70"
                     >
-                      {loginLoading ? (
+                      {loginLoading || authLoading ? (
                         <>
                           <span className="material-symbols-outlined animate-spin">refresh</span>
                           {t.common.loading}
