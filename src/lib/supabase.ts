@@ -48,7 +48,7 @@ export const getSubscription = async (userId: string) => {
   if (!supabase) return { data: null, error: new Error('Supabase no configurado') };
   
   const { data, error } = await supabase
-    .from('subscriptions')
+    .from('user_subscriptions')
     .select('*')
     .eq('user_id', userId)
     .single();
