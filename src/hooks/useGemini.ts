@@ -5,7 +5,7 @@ const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 // Fallback messages when API fails
-const fallbackMessages: Record<string, Record<string, string[]>> = {
+const fallbackMessagesES: Record<string, Record<string, string[]>> = {
   'Corporativo': {
     'light': [
       'Estimado {deudor}, le recordamos amablemente que tiene un saldo pendiente de {amount}. Quedamos atentos a su pronto pago. 📋',
@@ -50,6 +50,51 @@ const fallbackMessages: Record<string, Record<string, string[]>> = {
   }
 };
 
+const fallbackMessagesEN: Record<string, Record<string, string[]>> = {
+  'Corporate': {
+    'light': [
+      'Dear {debtor}, we kindly remind you that you have an outstanding balance of {amount}. We look forward to your prompt payment. 📋',
+      'Hi {debtor}, the finance department requests the regularization of the amount of {amount}. Thank you for your understanding! 🤝'
+    ],
+    'balanced': [
+      'Dear {debtor}, according to our records, you owe {amount}. We recommend settling to avoid "disciplinary procedures" 😏',
+      'Hello {debtor}, we inform you that your account has a balance of {amount}. The capybara collections team has been notified 🦫'
+    ],
+    'spicy': [
+      'Attention {debtor}: Your debt of {amount} has been escalated to HR. Prepare your resignation... from debt 💼😈',
+      'URGENT {debtor}: Your balance of {amount} is generating... emotional interest. Pay before the CEO finds out 🔥'
+    ]
+  },
+  'Mob Boss': {
+    'light': [
+      'Hey {debtor}, I have an "offer" you cannot refuse... paying me {amount} nicely 😉',
+      'Hi {debtor}, the "family" reminds you that you owe {amount}. It would be a shame if something happened... like me running out of money 💰'
+    ],
+    'balanced': [
+      'Listen {debtor}, Don Capybara wants his {amount}. He is a fair boss... but demanding 🦫🔪',
+      'Hey {debtor}, you are earning a spot on the blacklist for not paying {amount}. And I am not talking about Spotify 🎵🚫'
+    ],
+    'spicy': [
+      'Friend {debtor}, Don Vito does not sleep until he collects {amount}. And you do not want to see him sleep deprived... 😴🔪',
+      'Hey {debtor}, you owe {amount} and that is a problem. For you. For your health. For your dog 🐕‍🦺'
+    ]
+  },
+  'default': {
+    'light': [
+      'Hi {debtor}! 👋 Just passing by to kindly remind you that you owe me {amount}. No rush, but yes rush 😄',
+      'Hey {debtor}! 🌟 Your debt of {amount} is giving me existential anxiety. Can you help me sleep peacefully? 🥺'
+    ],
+    'balanced': [
+      'I spy {debtor}... with my little eye I see {amount} that you owe me and have not paid 👀💸',
+      'Hello {debtor}! 👋 Your debt of {amount} is colder than my ex. Shall we warm it up with a payment? 🥶➡️🔥'
+    ],
+    'spicy': [
+      'Hey {debtor}, {amount} does not pay itself... unless you are my sugar, which you are not 😤💅',
+      '{debtor}, you owe {amount} and your dignity is in the red 📉 The friendship vault needs a recharge 🏦😈'
+    ]
+  }
+};
+
 export function useGemini() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -58,7 +103,8 @@ export function useGemini() {
     debt: Debt,
     tone: Tone,
     level: HumorLevel,
-    userId?: string
+    userId?: string,
+    language: 'es' | 'en' = 'es'
   ): Promise<GeneratedMessage | null> => {
     setLoading(true);
     setError(null);
@@ -67,7 +113,7 @@ export function useGemini() {
       // Check if API key exists
       if (!API_KEY) {
         console.warn('⚠️ No API key found, using fallback message');
-        return generateFallbackMessage(debt, tone, level);
+        return generateFallbackMessage(debt, tone, level, language);
       }
 
       const prompt = buildPrompt(debt, tone, level);
@@ -134,8 +180,8 @@ export function useGemini() {
       };
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') {
-        setError('La IA tardó mucho en responder. Intenta de nuevo.');
-        const fallback = generateFallbackMessage(debt, tone, level);
+        setError(language === 'es' ? 'La IA tardó mucho en responder. Intenta de nuevo.' : 'AI took too long to respond. Try again.');
+        const fallback = generateFallbackMessage(debt, tone, level, language);
         await saveToHistory(debt, tone, level, fallback.text, userId);
         return fallback;
       }
@@ -144,7 +190,7 @@ export function useGemini() {
       const errorMessage = err instanceof Error ? err.message : '';
       if (errorMessage.includes('API key') || errorMessage.includes('not valid')) {
         console.log('🔑 API Key inválida, usando fallback...');
-        const fallback = generateFallbackMessage(debt, tone, level);
+        const fallback = generateFallbackMessage(debt, tone, level, language);
         await saveToHistory(debt, tone, level, fallback.text, userId);
         return fallback;
       }
@@ -153,7 +199,7 @@ export function useGemini() {
       setError(friendlyError);
       
       // Return fallback instead of null
-      const fallback = generateFallbackMessage(debt, tone, level);
+      const fallback = generateFallbackMessage(debt, tone, level, language);
       await saveToHistory(debt, tone, level, fallback.text, userId);
       return fallback;
     } finally {
@@ -161,14 +207,18 @@ export function useGemini() {
     }
   }, []);
 
-  const generateFallbackMessage = (debt: Debt, tone: Tone, level: HumorLevel): GeneratedMessage => {
+  const generateFallbackMessage = (debt: Debt, tone: Tone, level: HumorLevel, lang: 'es' | 'en' = 'es'): GeneratedMessage => {
     console.log('🔄 Generando mensaje fallback...');
-    const toneMessages = fallbackMessages[tone.name] || fallbackMessages['default'];
+    const messages = lang === 'en' ? fallbackMessagesEN : fallbackMessagesES;
+    // Map tone names for English fallback
+    const toneName = lang === 'en' ? (tone.name === 'Corporativo' ? 'Corporate' : tone.name === 'Mafioso' ? 'Mob Boss' : tone.name) : tone.name;
+    const toneMessages = messages[toneName] || messages['default'];
     const levelMessages = toneMessages[level] || toneMessages['balanced'];
     const template = levelMessages[Math.floor(Math.random() * levelMessages.length)];
     
     const text = template
       .replace('{deudor}', debt.debtor)
+      .replace('{debtor}', debt.debtor)
       .replace('{amount}', `${debt.currency === 'MXN' ? '$' : 'USD '}${debt.amount.toLocaleString()}`);
 
     console.log('✅ Mensaje fallback generado:', text.substring(0, 50) + '...');

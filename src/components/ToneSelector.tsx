@@ -1,4 +1,5 @@
 import type { Tone } from '../types';
+import { useTranslation } from '../i18n';
 
 interface Props {
   tones: Tone[];
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export function ToneSelector({ tones, selected, onSelect, loading, isPro = false, onUpgrade }: Props) {
+  const { t } = useTranslation();
   const blobClasses = ['blob-1', 'blob-2', 'blob-3', 'blob-4'];
 
   const localImages = [
@@ -43,7 +45,7 @@ export function ToneSelector({ tones, selected, onSelect, loading, isPro = false
       {/* Tonos Gratuitos */}
       <h3 className="font-headline font-extrabold text-xl text-on-surface/80 flex items-center gap-2 mb-2">
         <span className="material-symbols-outlined">mood</span>
-        Tonos Gratuitos
+        {t.tones.free}
       </h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         {tones.filter(t => !t.isPremium).map((tone, index) => {
@@ -67,7 +69,7 @@ export function ToneSelector({ tones, selected, onSelect, loading, isPro = false
             >
               {isSelected && (
                 <div className="absolute -top-2 -right-2 bg-primary text-on-primary px-3 py-1 rounded-full font-headline text-[10px] font-bold uppercase tracking-widest z-20">
-                  Activo
+                  {t.tones.active}
                 </div>
               )}
               
@@ -98,16 +100,16 @@ export function ToneSelector({ tones, selected, onSelect, loading, isPro = false
       <div className="mt-12 mb-6">
         <div className="flex items-center gap-3 mb-2">
           <h3 className="font-headline font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-500">
-            Los Ejecutores Premium 💎
+            {t.tones.premium} 💎
           </h3>
           {!isPro && (
             <span className="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
-              Exclusivo PRO
+              {t.tones.exclusivePro}
             </span>
           )}
         </div>
         <p className="text-on-surface-variant text-sm mb-4">
-          Maximiza tus posibilidades de cobro con personalidades ultra-persuasivas y de alto impacto.
+          {t.tones.premiumDesc}
         </p>
       </div>
       
@@ -139,7 +141,7 @@ export function ToneSelector({ tones, selected, onSelect, loading, isPro = false
               {/* Premium Badge */}
               {!isLocked && (
                 <div className="absolute -top-2 -left-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-2 py-1 rounded-full font-headline text-[10px] font-bold uppercase tracking-widest shadow-lg z-20">
-                  PRO
+                  {t.ui.proBadge}
                 </div>
               )}
               
@@ -148,14 +150,14 @@ export function ToneSelector({ tones, selected, onSelect, loading, isPro = false
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-surface/20 backdrop-blur-[1.5px] rounded-lg z-10 transition-all group-hover:bg-surface/10 ring-1 ring-inset ring-surface/30">
                   <div className="bg-surface/90 p-3 rounded-full shadow-lg flex flex-col items-center transform group-hover:scale-110 transition-transform">
                     <span className="material-symbols-outlined text-3xl text-primary mb-1">lock</span>
-                    <span className="text-[10px] font-black text-primary uppercase tracking-wide">Desbloquear</span>
+                    <span className="text-[10px] font-black text-primary uppercase tracking-wide">{t.tones.unlock}</span>
                   </div>
                 </div>
               )}
               
               {isSelected && !isLocked && (
                 <div className="absolute -top-2 -right-2 bg-primary text-on-primary px-3 py-1 rounded-full font-headline text-[10px] font-bold uppercase tracking-widest z-20">
-                  Activo
+                  {t.tones.active}
                 </div>
               )}
               
@@ -189,7 +191,7 @@ export function ToneSelector({ tones, selected, onSelect, loading, isPro = false
       {loading && (
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          <span className="ml-3 text-on-surface-variant font-medium">Generando mensaje...</span>
+          <span className="ml-3 text-on-surface-variant font-medium">{t.ui.generating}</span>
         </div>
       )}
     </div>

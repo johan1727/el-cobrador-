@@ -14,7 +14,10 @@ export const translations = {
       back: 'Volver',
       unlimited: 'Plan Pro Activo',
       freeMessages: 'mensajes gratis',
-      dailyLimit: 'Límite diario'
+      dailyLimit: 'Límite diario',
+      message: 'mensaje',
+      messages: 'mensajes',
+      total: 'Total'
     },
     nav: {
       debts: 'Deudas',
@@ -241,7 +244,175 @@ export const translations = {
     },
     error: {
       title: 'Error',
-      default: 'Algo salió mal. Intenta de nuevo.'
+      default: 'Algo salió mal. Intenta de nuevo.',
+      quotaExceeded: 'Límite de uso alcanzado. Intenta más tarde.',
+      apiKey: 'Problema con la API key. Usando mensaje alternativo.',
+      network: 'Sin conexión a internet. Usando mensaje local.',
+      generateFailed: 'Error al generar mensaje. Intenta de nuevo.',
+      timeout: 'La IA tardó mucho en responder. Intenta de nuevo.'
+    },
+    tones: {
+      free: 'Tonos Gratuitos',
+      premium: 'Los Ejecutores Premium',
+      premiumDesc: 'Maximiza tus posibilidades de cobro con personalidades ultra-persuasivas y de alto impacto.',
+      exclusivePro: 'Exclusivo PRO',
+      unlock: 'Desbloquear',
+      active: 'Activo',
+      corporativo: {
+        name: 'Corporativo',
+        description: 'Email de Recursos Humanos',
+        tagline: 'Su deuda es nuestra prioridad fiscal.'
+      },
+      mafioso: {
+        name: 'Mafioso',
+        description: 'El Padrino te habla',
+        tagline: 'Tengo ofertas que no podrá rechazar.'
+      },
+      dramatico: {
+        name: 'Dramático',
+        description: 'Telenovela mexicana',
+        tagline: '¿Cómo pudiste hacerme esto?'
+      },
+      poeta: {
+        name: 'Poeta',
+        description: 'Versos románticos',
+        tagline: 'La deuda es un verso sin rima.'
+      },
+      nerdy: {
+        name: 'Nerdy',
+        description: 'Error 404: Pago not found',
+        tagline: 'Error 404: Dignity not found.'
+      },
+      yogi: {
+        name: 'Yogi Zen',
+        description: 'Namaste... pero paga',
+        tagline: 'Namaste... pero paga.'
+      },
+      abuela: {
+        name: 'Abuela',
+        description: 'Todo el barrio sabe',
+        tagline: 'Me decepcionas, hijo. Paga ya.'
+      },
+      abogado: {
+        name: 'Abogado',
+        description: 'Términos legales',
+        tagline: 'Términos legales que debe conocer.'
+      },
+      chef: {
+        name: 'Chef',
+        description: '¡RAW!',
+        tagline: '¡RAW! ¡Tu excusa está cruda!'
+      },
+      influencer: {
+        name: 'Influencer',
+        description: 'Hey bestie 💕',
+        tagline: 'Hey bestie 💕 no me dejes en flop.'
+      },
+      motivacional: {
+        name: 'Motivacional',
+        description: 'Disciplina = pagar',
+        tagline: 'Disciplina = pagar. Mindset.'
+      },
+      alien: {
+        name: 'Alien',
+        description: 'Los humanos y sus deudas',
+        tagline: 'Moneda terrestre requerida de inmediato.'
+      },
+      profesor: {
+        name: 'El Profesor',
+        description: 'Clase magistral de finanzas',
+        tagline: 'Vamos a hacer un ejercicio sobre liquidez...'
+      },
+      coach: {
+        name: 'Coach Motivacional',
+        description: 'Tony Robbins de cobranza',
+        tagline: '¡Visualiza ese dinero entrando a tu vida!'
+      },
+      abogado_chicano: {
+        name: 'Abogado Chicano',
+        description: 'Saul Goodman style',
+        tagline: 'Según el artículo 247 del código bro...'
+      },
+      asmr: {
+        name: 'ASMR',
+        description: 'Susurros relajantes pero firmes',
+        tagline: '*susurro* Necesito que pagues... *susurro*'
+      },
+      chaman: {
+        name: 'Guía Espiritual',
+        description: 'Energías, karma y chakras',
+        tagline: 'El universo me está diciendo que necesito ese dinero...'
+      },
+      fitness: {
+        name: 'Gym Bro',
+        description: 'No pain, no gain',
+        tagline: '¡No dejes que tu cartera haga skipping ese pago!'
+      },
+      chef_pesado: {
+        name: 'Chef Pesado',
+        description: 'Gordon Ramsay extremo',
+        tagline: '¡ESE PAGO ESTÁ CRUDO! ¡CRUDO!'
+      },
+      politico: {
+        name: 'Político',
+        description: 'Muchas palabras, nada claro',
+        tagline: 'En estos momentos históricos que vivimos...'
+      },
+      rapero: {
+        name: 'Rapero',
+        description: 'Con rimas y flow',
+        tagline: 'Yo no quiero drama, solo mi paga, sin falta...'
+      },
+      abuela_sabia: {
+        name: 'Abuela Sabia',
+        description: 'Consejos de vida y cobranza',
+        tagline: 'Mijo, en mi época se pagaba el mismo día...'
+      },
+      ia: {
+        name: 'IA Robot',
+        description: 'ChatGPT style, muy técnico',
+        tagline: 'Procesando solicitud de transferencia...'
+      },
+      narcotelenovela: {
+        name: 'Narco Novela',
+        description: 'Telenovela mexicana de narcos',
+        tagline: '¿Sabes con quién te metiste? Paga.'
+      }
+    },
+    gemini: {
+      prompts: {
+        light: 'Amable, sin presión, casi un recordatorio amigable. Chiste suave, nadie se ofende. Tono: inocente y divertido.',
+        balanced: 'Sarcástico pero divertido. Enganche viral: que el receptor quiera saber qué app se usó. Tono: gracioso, gif-worthy.',
+        spicy: 'Ácido, roast suave. Para amigos que aguantan broma pesada. Tono: casi amenazante pero entre broma.'
+      },
+      systemPrompt: 'Genera un mensaje de WhatsApp para cobrar una deuda.'
+    },
+    billing: {
+      monthly: 'Mensual',
+      annual: 'Anual',
+      save: 'Ahorra',
+      perYear: '/año',
+      perMonth: '/mes',
+      or: 'o',
+      year: 'año'
+    },
+    ui: {
+      previewBadge: 'Vista Previa',
+      urgent: 'URGENTE',
+      qrTitle: 'Código QR de Pago',
+      download: 'DESCARGAR',
+      footer: 'Generado con ElCobrador.app',
+      newCollection: 'Crear nuevo cobro',
+      back: 'Volver',
+      generating: 'Generando mensaje...',
+      qrGenerating: 'Generando...',
+      whatsapp: 'WhatsApp',
+      chooseExecutor: 'Elige tu',
+      executor: 'ejecutor',
+      collectionStyle: 'Selecciona la personalidad que mejor se adapte a tu estilo de cobranza hoy.',
+      freeTones: 'Tonos Gratuitos',
+      premiumExecutors: 'Los Ejecutores Premium',
+      proBadge: 'PRO'
     }
   },
   en: {
@@ -257,7 +428,10 @@ export const translations = {
       back: 'Back',
       unlimited: 'Pro Plan Active',
       freeMessages: 'free messages',
-      dailyLimit: 'Daily limit'
+      dailyLimit: 'Daily limit',
+      message: 'message',
+      messages: 'messages',
+      total: 'Total'
     },
     nav: {
       debts: 'Debts',
@@ -484,7 +658,175 @@ export const translations = {
     },
     error: {
       title: 'Error',
-      default: 'Something went wrong. Try again.'
+      default: 'Something went wrong. Try again.',
+      quotaExceeded: 'Usage limit reached. Try again later.',
+      apiKey: 'API key issue. Using alternative message.',
+      network: 'No internet connection. Using local message.',
+      generateFailed: 'Failed to generate message. Try again.',
+      timeout: 'AI took too long to respond. Try again.'
+    },
+    tones: {
+      free: 'Free Tones',
+      premium: 'Premium Executors',
+      premiumDesc: 'Maximize your collection chances with ultra-persuasive, high-impact personalities.',
+      exclusivePro: 'PRO Exclusive',
+      unlock: 'Unlock',
+      active: 'Active',
+      corporativo: {
+        name: 'Corporate',
+        description: 'HR Email Style',
+        tagline: 'Your debt is our fiscal priority.'
+      },
+      mafioso: {
+        name: 'Mob Boss',
+        description: 'The Godfather speaks',
+        tagline: 'I have offers you cannot refuse.'
+      },
+      dramatico: {
+        name: 'Dramatic',
+        description: 'Mexican Telenovela',
+        tagline: 'How could you do this to me?'
+      },
+      poeta: {
+        name: 'Poet',
+        description: 'Romantic verses',
+        tagline: 'Debt is a verse without rhyme.'
+      },
+      nerdy: {
+        name: 'Nerdy',
+        description: 'Error 404: Payment not found',
+        tagline: 'Error 404: Dignity not found.'
+      },
+      yogi: {
+        name: 'Yogi Zen',
+        description: 'Namaste... but pay',
+        tagline: 'Namaste... but pay up.'
+      },
+      abuela: {
+        name: 'Grandma',
+        description: 'The whole neighborhood knows',
+        tagline: 'You disappoint me, son. Pay now.'
+      },
+      abogado: {
+        name: 'Lawyer',
+        description: 'Legal terms',
+        tagline: 'Legal terms you should know.'
+      },
+      chef: {
+        name: 'Chef',
+        description: 'RAW!',
+        tagline: 'RAW! Your excuse is undercooked!'
+      },
+      influencer: {
+        name: 'Influencer',
+        description: 'Hey bestie 💕',
+        tagline: 'Hey bestie 💕 do not leave me on flop.'
+      },
+      motivacional: {
+        name: 'Motivational',
+        description: 'Discipline = paying',
+        tagline: 'Discipline = paying. Mindset.'
+      },
+      alien: {
+        name: 'Alien',
+        description: 'Humans and their debts',
+        tagline: 'Earth currency required immediately.'
+      },
+      profesor: {
+        name: 'The Professor',
+        description: 'Masterclass in finance',
+        tagline: 'Let us do an exercise on liquidity...'
+      },
+      coach: {
+        name: 'Motivational Coach',
+        description: 'Tony Robbins of collections',
+        tagline: 'Visualize that money flowing into your life!'
+      },
+      abogado_chicano: {
+        name: 'Chicano Lawyer',
+        description: 'Saul Goodman style',
+        tagline: 'According to article 247 of the bro code...'
+      },
+      asmr: {
+        name: 'ASMR',
+        description: 'Relaxing but firm whispers',
+        tagline: '*whisper* I need you to pay... *whisper*'
+      },
+      chaman: {
+        name: 'Spiritual Guide',
+        description: 'Energies, karma and chakras',
+        tagline: 'The universe is telling me I need that money...'
+      },
+      fitness: {
+        name: 'Gym Bro',
+        description: 'No pain, no gain',
+        tagline: 'Do not let your wallet skip that payment!'
+      },
+      chef_pesado: {
+        name: 'Harsh Chef',
+        description: 'Extreme Gordon Ramsay',
+        tagline: 'THAT PAYMENT IS RAW! RAW!'
+      },
+      politico: {
+        name: 'Politician',
+        description: 'Many words, nothing clear',
+        tagline: 'In these historic times we live in...'
+      },
+      rapero: {
+        name: 'Rapper',
+        description: 'With rhymes and flow',
+        tagline: 'I do not want drama, just my pay, no fail...'
+      },
+      abuela_sabia: {
+        name: 'Wise Grandma',
+        description: 'Life and collection advice',
+        tagline: 'Son, in my day we paid the same day...'
+      },
+      ia: {
+        name: 'AI Robot',
+        description: 'ChatGPT style, very technical',
+        tagline: 'Processing transfer request...'
+      },
+      narcotelenovela: {
+        name: 'Narco Soap Opera',
+        description: 'Mexican narco telenovela',
+        tagline: 'Do you know who you are messing with? Pay.'
+      }
+    },
+    gemini: {
+      prompts: {
+        light: 'Friendly, no pressure, almost a friendly reminder. Soft joke, no one gets offended. Tone: innocent and fun.',
+        balanced: 'Sarcastic but funny. Viral hook: make the receiver want to know what app was used. Tone: funny, gif-worthy.',
+        spicy: 'Acidic, soft roast. For friends who can take heavy jokes. Tone: almost threatening but as a joke.'
+      },
+      systemPrompt: 'Generate a WhatsApp message to collect a debt.'
+    },
+    billing: {
+      monthly: 'Monthly',
+      annual: 'Annual',
+      save: 'Save',
+      perYear: '/year',
+      perMonth: '/month',
+      or: 'or',
+      year: 'year'
+    },
+    ui: {
+      previewBadge: 'Preview',
+      urgent: 'URGENT',
+      qrTitle: 'Payment QR Code',
+      download: 'DOWNLOAD',
+      footer: 'Generated with ElCobrador.app',
+      newCollection: 'Create new collection',
+      back: 'Back',
+      generating: 'Generating message...',
+      qrGenerating: 'Generating...',
+      whatsapp: 'WhatsApp',
+      chooseExecutor: 'Choose your',
+      executor: 'executor',
+      collectionStyle: 'Select the personality that best fits your collection style today.',
+      freeTones: 'Free Tones',
+      premiumExecutors: 'Premium Executors',
+      proBadge: 'PRO'
     }
   }
 };

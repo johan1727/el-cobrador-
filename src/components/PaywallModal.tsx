@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from '../i18n';
 
 interface Props {
   open: boolean;
@@ -15,6 +16,7 @@ export function PaywallModal({
   progressPercentage = 100,
   dailyLimit = 10
 }: Props) {
+  const { t, language } = useTranslation();
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (open) {
@@ -49,9 +51,9 @@ export function PaywallModal({
           <div className="absolute bottom-6 left-8">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/30 border border-white/20 mb-3">
               <span className="material-symbols-outlined text-[18px] text-white" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
-              <span className="text-[12px] font-bold text-white tracking-wider">EL COBRADOR PRO</span>
+              <span className="text-[12px] font-bold text-white tracking-wider">{t.paywall.badge}</span>
             </div>
-            <h2 className="text-3xl font-extrabold text-white tracking-tight leading-none">Llegaste al límite</h2>
+            <h2 className="text-3xl font-extrabold text-white tracking-tight leading-none">{t.paywall.title}</h2>
           
           {/* Progress indicator */}
           <div className="mt-4 flex items-center gap-2">
@@ -68,7 +70,7 @@ export function PaywallModal({
 
         <div className="p-8">
           <p className="text-on-surface-variant text-lg font-medium leading-relaxed mb-4">
-            Has generado el máximo de mensajes gratuitos por hoy. Para seguir cobrando sin límites, actualiza a Pro.
+            {t.paywall.subtitle}
           </p>
           
           {/* Countdown */}
@@ -77,7 +79,7 @@ export function PaywallModal({
               <div className="flex items-center gap-3">
                 <span className="material-symbols-outlined text-primary">schedule</span>
                 <div>
-                  <p className="text-sm text-on-surface-variant">Nuevos mensajes disponibles en:</p>
+                  <p className="text-sm text-on-surface-variant">{language === 'es' ? 'Nuevos mensajes disponibles en:' : 'New messages available in:'}</p>
                   <p className="text-xl font-bold text-primary">
                     {timeUntilReset.hours}h {timeUntilReset.minutes}m
                   </p>
@@ -93,8 +95,8 @@ export function PaywallModal({
                 <span className="material-symbols-outlined">all_inclusive</span>
               </div>
               <div>
-                <h4 className="font-bold text-on-surface">Mensajes ilimitados</h4>
-                <p className="text-sm text-on-surface-variant">Sin restricciones diarias ni mensuales.</p>
+                <h4 className="font-bold text-on-surface">{t.paywall.features.unlimited.title}</h4>
+                <p className="text-sm text-on-surface-variant">{t.paywall.features.unlimited.desc}</p>
               </div>
             </div>
             <div className="flex items-center gap-5 p-4 rounded-lg bg-surface-container-low transition-all hover:bg-surface-container">
@@ -102,8 +104,8 @@ export function PaywallModal({
                 <span className="material-symbols-outlined">history</span>
               </div>
               <div>
-                <h4 className="font-bold text-on-surface">Historial en la nube</h4>
-                <p className="text-sm text-on-surface-variant">Tus mensajes guardados y sincronizados.</p>
+                <h4 className="font-bold text-on-surface">{t.paywall.features.history.title}</h4>
+                <p className="text-sm text-on-surface-variant">{t.paywall.features.history.desc}</p>
               </div>
             </div>
             <div className="flex items-center gap-5 p-4 rounded-lg bg-surface-container-low transition-all hover:bg-surface-container">
@@ -111,8 +113,8 @@ export function PaywallModal({
                 <span className="material-symbols-outlined">qr_code_2</span>
               </div>
               <div>
-                <h4 className="font-bold text-on-surface">QR personalizado</h4>
-                <p className="text-sm text-on-surface-variant">Códigos QR ilimitados para compartir.</p>
+                <h4 className="font-bold text-on-surface">{t.paywall.features.qr.title}</h4>
+                <p className="text-sm text-on-surface-variant">{t.paywall.features.qr.desc}</p>
               </div>
             </div>
           </div>
@@ -122,17 +124,20 @@ export function PaywallModal({
             <div className="text-center">
               <div className="flex items-baseline justify-center gap-1">
                 <span className="text-4xl font-extrabold text-primary">$3.99</span>
-                <span className="text-on-surface-variant font-medium">/mes</span>
+                <span className="text-on-surface-variant font-medium">{t.paywall.period}</span>
               </div>
-              <p className="text-xs text-on-surface-variant mt-1 font-semibold tracking-wide uppercase">Cancela cuando quieras</p>
+              <p className="text-xs text-on-surface-variant mt-1 font-semibold tracking-wide uppercase">{language === 'es' ? 'Cancela cuando quieras' : 'Cancel anytime'}</p>
             </div>
             <button
               onClick={() => {
-                alert('¡Gracias por tu interés! El pago se habilitará próximamente. Por ahora, vuelve mañana para más mensajes gratis.');
+                alert(language === 'es' 
+                  ? '¡Gracias por tu interés! El pago se habilitará próximamente. Por ahora, vuelve mañana para más mensajes gratis.'
+                  : 'Thanks for your interest! Payment will be enabled soon. For now, come back tomorrow for more free messages.'
+                );
               }}
               className="w-full py-5 rounded-full bg-gradient-to-r from-primary to-primary-container text-white text-lg font-extrabold shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-95 transition-all flex items-center justify-center gap-3"
             >
-              Ver planes Pro
+              {t.paywall.cta}
               <span className="material-symbols-outlined">rocket_launch</span>
             </button>
             <div className="flex flex-col items-center gap-2">
@@ -140,10 +145,13 @@ export function PaywallModal({
                 onClick={onClose}
                 className="text-on-surface-variant text-sm font-bold hover:text-primary transition-colors"
               >
-                Volver al inicio
+                {t.paywall.keepFree}
               </button>
               <p className="text-xs text-on-surface-variant/60">
-                Los mensajes gratuitos se reinician a medianoche
+                {language === 'es' 
+                  ? 'Los mensajes gratuitos se reinician a medianoche'
+                  : 'Free messages reset at midnight'
+                }
               </p>
             </div>
           </div>

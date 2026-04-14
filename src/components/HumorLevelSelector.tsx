@@ -1,5 +1,5 @@
 import type { HumorLevel } from '../types';
-import { humorLevelLabels } from '../data/tones';
+import { useTranslation } from '../i18n';
 
 interface Props {
   level: HumorLevel;
@@ -8,6 +8,7 @@ interface Props {
 }
 
 export function HumorLevelSelector({ level, onChange, onContinue }: Props) {
+  const { t } = useTranslation();
   const levels: HumorLevel[] = ['light', 'balanced', 'spicy'];
   const blobClasses = ['blob-1', 'blob-2', 'blob-3'];
 
@@ -30,8 +31,9 @@ export function HumorLevelSelector({ level, onChange, onContinue }: Props) {
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4">
         {levels.map((l, index) => {
-          const { label, emoji, description } = humorLevelLabels[l];
+          const levelData = t.humor.levels[l];
           const isSelected = level === l;
+          const emoji = l === 'light' ? '😇' : l === 'balanced' ? '😏' : '😈';
           
           return (
             <button
@@ -42,10 +44,10 @@ export function HumorLevelSelector({ level, onChange, onContinue }: Props) {
               <span className="text-4xl">{emoji}</span>
               <div className="flex-1">
                 <h3 className="font-headline font-bold text-xl tracking-tight leading-none mb-1">
-                  {label.toUpperCase()}
+                  {levelData.name.toUpperCase()}
                 </h3>
                 <p className={`text-sm ${isSelected ? 'opacity-90' : 'text-on-surface-variant'}`}>
-                  {description}
+                  {levelData.desc}
                 </p>
               </div>
               {isSelected && (
@@ -60,7 +62,7 @@ export function HumorLevelSelector({ level, onChange, onContinue }: Props) {
         onClick={onContinue}
         className="w-full py-5 wavy-button bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-black text-xl uppercase tracking-wider shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all duration-200"
       >
-        Continuar
+        {t.common.continue}
       </button>
     </div>
   );

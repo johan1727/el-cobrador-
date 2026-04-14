@@ -206,7 +206,7 @@ function AppContent() {
               className="mb-4 flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors"
             >
               <span className="material-symbols-outlined">arrow_back</span>
-              <span className="text-sm font-medium">Volver</span>
+              <span className="text-sm font-medium">{t.common.back}</span>
             </button>
             <h2 className="font-headline font-extrabold text-4xl text-on-surface tracking-tighter leading-none mb-4 uppercase">
               {t.humor.title}
@@ -226,13 +226,13 @@ function AppContent() {
               className="mb-4 flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors"
             >
               <span className="material-symbols-outlined">arrow_back</span>
-              <span className="text-sm font-medium">Volver</span>
+              <span className="text-sm font-medium">{t.common.back}</span>
             </button>
             <h2 className="font-headline font-extrabold text-4xl text-on-surface tracking-tighter leading-none mb-4 uppercase">
-              Elige tu <br /><span className="text-primary italic">ejecutor</span>
+              {t.ui.chooseExecutor} <br /><span className="text-primary italic">{t.ui.executor}</span>
             </h2>
             <p className="text-on-surface-variant max-w-[80%] leading-relaxed mb-8">
-              Selecciona la personalidad que mejor se adapte a tu estilo de cobranza hoy.
+              {t.ui.collectionStyle}
             </p>
             <ToneSelector 
               tones={tones} 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from '../i18n';
 
 interface Props {
   onClose: () => void;
@@ -13,6 +14,7 @@ interface Client {
 }
 
 export function ClientsView({ onClose, onSelect }: Props) {
+  const { t } = useTranslation();
   const [clients, setClients] = useState<Client[]>([]);
   const [search, setSearch] = useState('');
   const [newClient, setNewClient] = useState('');
@@ -69,7 +71,7 @@ export function ClientsView({ onClose, onSelect }: Props) {
   };
 
   const handleDeleteClient = (name: string) => {
-    if (confirm(`¿Eliminar a ${name} de la lista?`)) {
+    if (confirm(t.clients.confirmDelete(name))) {
       const updated = clients.filter(c => c.name !== name);
       setClients(updated);
     }
@@ -93,7 +95,7 @@ export function ClientsView({ onClose, onSelect }: Props) {
                 src="https://api.dicebear.com/7.x/avataaars/svg?seed=capybara&backgroundColor=eaddff"
               />
             </div>
-            <h1 className="text-xl font-extrabold text-primary tracking-tight">El Cobrador</h1>
+            <h1 className="text-xl font-extrabold text-primary tracking-tight">{t.common.appName}</h1>
           </div>
           <button
             onClick={onClose}
@@ -115,7 +117,7 @@ export function ClientsView({ onClose, onSelect }: Props) {
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Buscar clientes o facturas..."
+                  placeholder={t.clients.searchPlaceholder}
                   className="w-full bg-surface-container-high border-none rounded-lg py-4 pl-12 pr-4 text-on-surface placeholder-on-surface-variant focus:ring-2 focus:ring-primary transition-all duration-300"
                 />
               </div>
@@ -125,18 +127,18 @@ export function ClientsView({ onClose, onSelect }: Props) {
             <div className="relative overflow-hidden mb-8 p-8 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white shadow-xl">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
               <div className="relative z-10">
-                <p className="text-white/70 font-medium tracking-wide mb-2">Cartera Total</p>
+                <p className="text-white/70 font-medium tracking-wide mb-2">{t.clients.totalPortfolio}</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-4xl md:text-5xl font-extrabold tracking-tight">${totalOwed.toLocaleString()}</span>
                   <span className="text-white/60 text-lg">MXN</span>
                 </div>
                 <div className="mt-6 flex gap-4">
                   <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-                    <span className="text-xs font-bold uppercase tracking-widest text-white/80">Pendiente</span>
+                    <span className="text-xs font-bold uppercase tracking-widest text-white/80">{t.clients.pending}</span>
                     <p className="text-lg font-bold">${pendingAmount.toLocaleString()}</p>
                   </div>
                   <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-                    <span className="text-xs font-bold uppercase tracking-widest text-white/80">Deudores</span>
+                    <span className="text-xs font-bold uppercase tracking-widest text-white/80">{t.clients.debtors}</span>
                     <p className="text-lg font-bold text-secondary-fixed-dim">{clients.length}</p>
                   </div>
                 </div>
@@ -150,7 +152,7 @@ export function ClientsView({ onClose, onSelect }: Props) {
                 value={newClient}
                 onChange={(e) => setNewClient(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleAddClient()}
-                placeholder="Nombre del nuevo deudor..."
+                placeholder={t.clients.addNew}
                 className="flex-1 bg-surface-container-high border-none rounded-lg py-4 px-4 text-on-surface placeholder-on-surface-variant focus:ring-2 focus:ring-primary transition-all"
               />
               <button
@@ -171,18 +173,18 @@ export function ClientsView({ onClose, onSelect }: Props) {
                     <span className="material-symbols-outlined text-8xl text-primary/20" style={{ fontVariationSettings: "'FILL' 1" }}>account_balance_wallet</span>
                   </div>
                 </div>
-                <h2 className="text-2xl font-bold text-on-surface mb-3 tracking-tight">Tu cartera está vacía</h2>
+                <h2 className="text-2xl font-bold text-on-surface mb-3 tracking-tight">{t.clients.emptyTitle}</h2>
                 <p className="text-on-surface-variant max-w-xs mb-6 leading-relaxed">
-                  Guarda deudores frecuentes para cobrar más rápido. Se generan automáticamente desde tu historial.
+                  {t.clients.emptySubtitle}
                 </p>
                 <p className="text-on-surface-variant text-sm">
-                  Tip: Escribe un nombre arriba y presiona + para agregarlo
+                  {t.clients.emptyTip}
                 </p>
               </section>
             ) : (
               <section className="space-y-3">
                 <h3 className="text-on-surface-variant font-bold text-sm tracking-widest uppercase px-2 mb-4">
-                  Tus Deudores ({clients.length})
+                  {t.clients.title} ({clients.length})
                 </h3>
                 {filteredClients.map((client) => (
                   <div
@@ -196,7 +198,7 @@ export function ClientsView({ onClose, onSelect }: Props) {
                       <div>
                         <h4 className="font-bold text-on-surface">{client.name}</h4>
                         <p className="text-xs text-on-surface-variant font-medium">
-                          {client.count} cobro{client.count > 1 ? 's' : ''} • Total: ${client.total.toLocaleString()}
+                          {client.count} {client.count > 1 ? t.common.messages : t.common.message} • {t.common.total}: ${client.total.toLocaleString()}
                         </p>
                       </div>
                     </div>
@@ -205,12 +207,12 @@ export function ClientsView({ onClose, onSelect }: Props) {
                         onClick={() => onSelect(client.name)}
                         className="bg-primary text-on-primary px-5 py-2 rounded-full text-sm font-bold hover:opacity-90 transition-opacity"
                       >
-                        Cobrar
+                        {t.clients.charge}
                       </button>
                       <button
                         onClick={() => handleDeleteClient(client.name)}
                         className="text-error hover:bg-error/10 p-2 rounded-full transition-colors opacity-0 group-hover:opacity-100"
-                        title="Eliminar"
+                        title={t.common.delete}
                       >
                         <span className="material-symbols-outlined">delete</span>
                       </button>
@@ -225,7 +227,7 @@ export function ClientsView({ onClose, onSelect }: Props) {
               <div className="col-span-1 bg-surface-container-low p-6 rounded-xl">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="material-symbols-outlined text-primary">insights</span>
-                  <p className="text-sm font-bold text-on-surface-variant">Cobros Totales</p>
+                  <p className="text-sm font-bold text-on-surface-variant">{t.clients.totalCollections}</p>
                 </div>
                 <p className="text-2xl font-extrabold text-on-surface">
                   {clients.reduce((sum, c) => sum + c.count, 0)}
@@ -234,7 +236,7 @@ export function ClientsView({ onClose, onSelect }: Props) {
               <div className="col-span-1 bg-surface-container-low p-6 rounded-xl">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="material-symbols-outlined text-primary">history_edu</span>
-                  <p className="text-sm font-bold text-on-surface-variant">Promedio por Cobro</p>
+                  <p className="text-sm font-bold text-on-surface-variant">{t.clients.averagePerCollection}</p>
                 </div>
                 <p className="text-2xl font-extrabold text-on-surface">
                   ${clients.length > 0 ? Math.round(totalOwed / clients.reduce((sum, c) => sum + c.count, 0)).toLocaleString() : '0'}

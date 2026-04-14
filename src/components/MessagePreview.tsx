@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { GeneratedMessage, Debt, Tone, HumorLevel } from '../types';
 import { useQR } from '../hooks/useQR';
+import { useTranslation } from '../i18n';
 
 interface Props {
   message: GeneratedMessage;
@@ -17,6 +18,7 @@ export function MessagePreview({ message, debt, selectedTone, level, onFlip, onR
   const [copied, setCopied] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const { qrDataUrl, loading: qrLoading, generateQR, downloadQR } = useQR();
+  const { t } = useTranslation();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(message.text);
@@ -52,8 +54,8 @@ export function MessagePreview({ message, debt, selectedTone, level, onFlip, onR
 
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            <span className="font-headline font-bold text-xs uppercase tracking-widest text-primary">Vista Previa</span>
-            <span className="bg-tertiary-container/10 text-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold">URGENTE</span>
+            <span className="font-headline font-bold text-xs uppercase tracking-widest text-primary">{t.ui.previewBadge}</span>
+            <span className="bg-tertiary-container/10 text-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold">{t.ui.urgent}</span>
           </div>
 
           {/* Main Message Body */}
@@ -90,7 +92,7 @@ export function MessagePreview({ message, debt, selectedTone, level, onFlip, onR
           className="blob-button bg-primary text-white p-6 flex flex-col items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 duration-200 shadow-xl shadow-primary/10"
         >
           <span className="material-symbols-outlined text-2xl">{copied ? 'check_circle' : 'content_copy'}</span>
-          <span className="font-headline font-bold text-xs uppercase tracking-tight">{copied ? '¡Copiado!' : 'Copiar'}</span>
+          <span className="font-headline font-bold text-xs uppercase tracking-tight">{copied ? t.preview.copied : t.preview.copy}</span>
         </button>
 
         <button
@@ -98,7 +100,7 @@ export function MessagePreview({ message, debt, selectedTone, level, onFlip, onR
           className="blob-button bg-[#25D366] text-white p-6 flex flex-col items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 duration-200 shadow-xl shadow-green-500/20"
         >
           <span className="material-symbols-outlined text-2xl">chat</span>
-          <span className="font-headline font-bold text-xs uppercase tracking-tight">WhatsApp</span>
+          <span className="font-headline font-bold text-xs uppercase tracking-tight">{t.ui.whatsapp}</span>
         </button>
 
         <button
@@ -107,7 +109,7 @@ export function MessagePreview({ message, debt, selectedTone, level, onFlip, onR
           className="blob-button bg-tertiary text-white p-6 flex flex-col items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 duration-200 shadow-xl shadow-tertiary/10 disabled:opacity-50"
         >
           <span className="material-symbols-outlined text-2xl">qr_code_2</span>
-          <span className="font-headline font-bold text-xs uppercase tracking-tight">{qrLoading ? 'Generando...' : 'QR'}</span>
+          <span className="font-headline font-bold text-xs uppercase tracking-tight">{qrLoading ? t.ui.qrGenerating : 'QR'}</span>
         </button>
 
         <button
@@ -115,7 +117,7 @@ export function MessagePreview({ message, debt, selectedTone, level, onFlip, onR
           className="blob-button bg-surface-container-highest text-on-surface p-6 flex flex-col items-center justify-center gap-2 hover:bg-surface-container-high transition-all active:scale-95 duration-200"
         >
           <span className="material-symbols-outlined text-2xl">flip</span>
-          <span className="font-headline font-bold text-xs uppercase tracking-tight">Flip</span>
+          <span className="font-headline font-bold text-xs uppercase tracking-tight">{t.preview.flip}</span>
         </button>
       </div>
 
@@ -123,7 +125,7 @@ export function MessagePreview({ message, debt, selectedTone, level, onFlip, onR
       {showQR && (
         <div className="blob-shape bg-surface-container p-6 flex flex-col items-center text-center animate-in fade-in slide-in-from-top-2 duration-300">
           <div className="w-full flex justify-between items-center mb-4 px-2">
-            <span className="font-headline font-bold text-sm uppercase text-on-surface-variant">Código QR de Pago</span>
+            <span className="font-headline font-bold text-sm uppercase text-on-surface-variant">{t.ui.qrTitle}</span>
             <button onClick={() => setShowQR(false)} className="text-on-surface-variant hover:text-primary">
               <span className="material-symbols-outlined">close</span>
             </button>
@@ -138,7 +140,7 @@ export function MessagePreview({ message, debt, selectedTone, level, onFlip, onR
                 className="flex items-center gap-2 px-6 py-2 rounded-full border-2 border-primary text-primary font-bold text-sm hover:bg-primary hover:text-on-primary transition-all"
               >
                 <span className="material-symbols-outlined text-sm">download</span>
-                DESCARGAR
+                {t.ui.download}
               </button>
             </>
           )}
@@ -148,7 +150,7 @@ export function MessagePreview({ message, debt, selectedTone, level, onFlip, onR
       {/* Viral Footer */}
       <footer className="flex flex-col items-center justify-center py-8 opacity-60">
         <p className="font-headline text-xl text-primary mb-1">
-          💸 Generado con ElCobrador.app
+          💸 {t.ui.footer}
         </p>
         <div className="flex gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-primary/30"></span>
@@ -163,7 +165,7 @@ export function MessagePreview({ message, debt, selectedTone, level, onFlip, onR
         className="w-full py-4 rounded-xl text-primary font-bold hover:bg-primary/5 transition-colors flex items-center justify-center gap-2"
       >
         <span className="material-symbols-outlined">refresh</span>
-        Crear nuevo cobro
+        {t.ui.newCollection}
       </button>
     </div>
   );
