@@ -22,15 +22,25 @@ export function useAuth() {
       }
 
       try {
-        const { data: { session } } = await supabase!.auth.getSession();
+        // Obtener sesión actual (incluye tokens de URL si existen)
+        const { data: { session }, error } = await supabase!.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error);
+        }
         
         if (session?.user) {
+          console.log('✅ User authenticated:', session.user.email);
           setUser({
             id: session.user.id,
             email: session.user.email || '',
             name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Usuario',
             avatar_url: session.user.user_metadata?.avatar_url
           });
+          // Limpiar URL si hay tokens
+          if (window.location.hash || window.location.search.includes('access_token')) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
         }
       } catch (error) {
         console.error('Error checking session:', error);
