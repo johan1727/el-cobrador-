@@ -49,7 +49,10 @@ export function useAuth() {
       }
     };
 
-    checkSession();
+    // Delay para dar tiempo a Supabase de procesar tokens de URL (OAuth redirect)
+    const timer = setTimeout(() => {
+      checkSession();
+    }, 500);
 
     // Listen for auth changes
     if (isConfigured) {
@@ -67,9 +70,14 @@ export function useAuth() {
       });
 
       return () => {
+        clearTimeout(timer);
         subscription.unsubscribe();
       };
     }
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [isConfigured]);
 
   const signInWithGoogle = useCallback(async () => {
