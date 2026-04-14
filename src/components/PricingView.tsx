@@ -12,6 +12,7 @@ interface Props {
 export function PricingView({ open, onClose, isPro }: Props) {
   const { t, language } = useTranslation();
   const [isAnnual, setIsAnnual] = useState(false);
+  const [showLoginNotice, setShowLoginNotice] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -81,6 +82,34 @@ export function PricingView({ open, onClose, isPro }: Props) {
             {t.pricing.hero.subtitle}
           </p>
         </section>
+
+        {showLoginNotice && !user && (
+          <section className="mb-8 rounded-3xl border border-primary/20 bg-primary-container/40 px-5 py-4 shadow-sm">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-on-primary">
+                  <span className="material-symbols-outlined">login</span>
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold text-on-surface">
+                    {language === 'es' ? 'Inicia sesión para suscribirte' : 'Sign in to subscribe'}
+                  </h3>
+                  <p className="mt-1 text-sm font-medium text-on-surface-variant">
+                    {language === 'es'
+                      ? 'Primero entra con tu cuenta de Google para conectar tu plan y activar tu suscripción.'
+                      : 'Sign in with your Google account first to connect your plan and activate your subscription.'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowLoginNotice(false)}
+                className="flex h-9 w-9 items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface/70 hover:text-on-surface"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+          </section>
+        )}
 
         {/* Billing Toggle */}
         <div className="flex justify-center mb-8">
@@ -190,9 +219,11 @@ export function PricingView({ open, onClose, isPro }: Props) {
                     if (isCurrentPlan || plan.key === 'basic') return;
                     
                     if (!user) {
-                      alert(language === 'es' ? 'Por favor inicia sesión para suscribirte' : 'Please sign in to subscribe');
+                      setShowLoginNotice(true);
                       return;
                     }
+
+                    setShowLoginNotice(false);
                     
                     // Stripe Payment Links directos con client_reference_id
                     const paymentLinks: Record<string, Record<string, string>> = {
