@@ -11,7 +11,7 @@ import { PricingView } from './components/PricingView';
 import { useGemini } from './hooks/useGemini';
 import { useUsageLimit } from './hooks/useUsageLimit';
 import { useSound } from './hooks/useSound';
-import { useAuth } from './hooks/useAuth';
+import { AuthProvider, useAuth } from './hooks/useAuth';
 import { useSubscription } from './hooks/useSubscription';
 import { usePersistentState } from './hooks/usePersistentState';
 import { I18nProvider, useTranslation } from './i18n';
@@ -363,7 +363,9 @@ function AppContent() {
 function App() {
   return (
     <I18nProvider>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </I18nProvider>
   );
 }

@@ -5,7 +5,14 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Create client only if credentials exist
 export const supabase = supabaseUrl && supabaseKey 
-  ? createClient(supabaseUrl, supabaseKey)
+  ? createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        flowType: 'implicit',
+      },
+    })
   : null;
 
 // Helper to check if Supabase is configured

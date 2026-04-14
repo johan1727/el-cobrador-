@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 interface User {
@@ -8,75 +8,93 @@ interface User {
   avatar_url?: string;
 }
 
-export function useAuth() {
+interface AuthContextValue {
+  user: User | null;
+  loading: boolean;
+  isConfigured: boolean;
+  signInWithGoogle: () => Promise<{ data?: unknown; error: Error | null }>;
+  signOut: () => Promise<{ error: Error | null }>;
+  isAuthenticated: boolean;
+}
+
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+
+const mapSessionUser = (sessionUser: {
+  id: string;
+  email?: string;
+  user_metadata?: Record<string, unknown>;
+}) => ({
+  id: sessionUser.id,
+  email: sessionUser.email || '',
+  name:
+    (typeof sessionUser.user_metadata?.full_name === 'string' && sessionUser.user_metadata.full_name) ||
+    sessionUser.email?.split('@')[0] ||
+    'Usuario',
+  avatar_url:
+    typeof sessionUser.user_metadata?.avatar_url === 'string'
+      ? sessionUser.user_metadata.avatar_url
+      : undefined,
+});
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isConfigured] = useState(() => isSupabaseConfigured());
+  const isConfigured = useMemo(() => isSupabaseConfigured(), []);
 
   useEffect(() => {
-    // Check for existing session
-    const checkSession = async () => {
-      if (!isConfigured) {
-        setLoading(false);
-        return;
-      }
+    if (!isConfigured) {
+      setLoading(false);
+      return;
+    }
 
+    const checkSession = async () => {
       try {
-        // Obtener sesión actual (incluye tokens de URL si existen)
+        const hasAuthParams = window.location.hash.includes('access_token') || window.location.search.includes('code=');
+        console.log('[auth] init', {
+          hasHash: !!window.location.hash,
+          hasSearch: !!window.location.search,
+          hasAuthParams,
+        });
+
         const { data: { session }, error } = await supabase!.auth.getSession();
-        
+
         if (error) {
-          console.error('Error getting session:', error);
+          console.error('[auth] getSession error', error);
         }
-        
+
         if (session?.user) {
-          console.log('✅ User authenticated:', session.user.email);
-          setUser({
-            id: session.user.id,
-            email: session.user.email || '',
-            name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Usuario',
-            avatar_url: session.user.user_metadata?.avatar_url
-          });
-          // Limpiar URL si hay tokens
-          if (window.location.hash || window.location.search.includes('access_token')) {
+          console.log('[auth] hydrated session', session.user.email);
+          setUser(mapSessionUser(session.user));
+          if (window.location.hash || window.location.search.includes('access_token') || window.location.search.includes('code=')) {
             window.history.replaceState({}, document.title, window.location.pathname);
           }
+        } else {
+          console.log('[auth] no session after init');
         }
       } catch (error) {
-        console.error('Error checking session:', error);
+        console.error('[auth] checkSession exception', error);
       } finally {
         setLoading(false);
       }
     };
 
-    // Delay para dar tiempo a Supabase de procesar tokens de URL (OAuth redirect)
-    const timer = setTimeout(() => {
-      checkSession();
-    }, 500);
+    const timer = window.setTimeout(checkSession, 500);
 
-    // Listen for auth changes
-    if (isConfigured) {
-      const { data: { subscription } } = supabase!.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_IN' && session?.user) {
-          setUser({
-            id: session.user.id,
-            email: session.user.email || '',
-            name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Usuario',
-            avatar_url: session.user.user_metadata?.avatar_url
-          });
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null);
+    const { data: { subscription } } = supabase!.auth.onAuthStateChange((event, session) => {
+      console.log('[auth] state change', event, !!session?.user);
+      if (event === 'SIGNED_IN' && session?.user) {
+        setUser(mapSessionUser(session.user));
+        if (window.location.hash || window.location.search.includes('access_token') || window.location.search.includes('code=')) {
+          window.history.replaceState({}, document.title, window.location.pathname);
         }
-      });
-
-      return () => {
-        clearTimeout(timer);
-        subscription.unsubscribe();
-      };
-    }
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+      }
+    });
 
     return () => {
       clearTimeout(timer);
+      subscription.unsubscribe();
     };
   }, [isConfigured]);
 
@@ -86,8 +104,8 @@ export function useAuth() {
     }
 
     try {
-      // Usar VITE_APP_URL si está disponible, sino window.location.origin
       const redirectUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+      console.log('[auth] signInWithGoogle', { redirectUrl });
       const { data, error } = await supabase!.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -95,7 +113,7 @@ export function useAuth() {
         },
       });
 
-      return { data, error };
+      return { data, error: error ?? null };
     } catch (error) {
       return { error: error as Error };
     }
@@ -112,18 +130,30 @@ export function useAuth() {
       if (!error) {
         setUser(null);
       }
-      return { error };
+      return { error: error ?? null };
     } catch (error) {
       return { error: error as Error };
     }
   }, [isConfigured]);
 
-  return {
+  const value = useMemo<AuthContextValue>(() => ({
     user,
     loading,
     isConfigured,
     signInWithGoogle,
     signOut,
-    isAuthenticated: !!user
-  };
+    isAuthenticated: !!user,
+  }), [user, loading, isConfigured, signInWithGoogle, signOut]);
+
+  return createElement(AuthContext.Provider, { value }, children);
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error('useAuth must be used within AuthProvider');
+  }
+
+  return context;
 }
