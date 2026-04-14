@@ -88,7 +88,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (error) {
           console.error('[auth] getSession error', error);
-          alert(`Auth Fallido: ${error.message || JSON.stringify(error)}`);
         }
 
         if (session?.user) {
