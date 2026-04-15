@@ -93,7 +93,7 @@ export function EditMessageInline({ initialText, onSave, onCancel, isLoading }: 
           {isLoading ? (
             <>
               <span className="material-symbols-outlined text-sm animate-spin">refresh</span>
-              {language === 'es' ? 'Guardando...' : 'Saving...'}
+              {t.history.saving}
             </>
           ) : (
             <>
@@ -115,10 +115,7 @@ export function EditMessageInline({ initialText, onSave, onCancel, isLoading }: 
 
       {/* Keyboard shortcuts hint */}
       <p className="text-[10px] text-on-surface-variant/60 mt-2 text-center">
-        {language === 'es' 
-          ? 'Ctrl+Enter para guardar • Esc para cancelar'
-          : 'Ctrl+Enter to save • Esc to cancel'
-        }
+        {t.history.keyboardShortcuts}
       </p>
     </div>
   );

@@ -70,10 +70,21 @@ export const translations = {
         spicy: 'Ácido'
       },
       weeklyActivity: 'Actividad de la semana',
+      weekDays: ['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'DOM'],
+      allCaughtUpTitle: '¡Todo al día!',
+      allCaughtUpDesc: 'No tienes deudas pendientes por cobrar. Genera un mensaje y te recordaremos automáticamente.',
+      exportCSV: 'Exportar CSV',
+      copyMessage: 'Copiar mensaje',
+      copied: '¡Copiado!',
       edit: 'Editar',
       editSuccess: 'Mensaje actualizado',
       editError: 'Error al guardar',
-      editPlaceholder: 'Escribe tu mensaje personalizado...'
+      editPlaceholder: 'Escribe tu mensaje personalizado...',
+      saving: 'Guardando...',
+      save: 'Guardar',
+      cancel: 'Cancelar',
+      keyboardShortcuts: 'Ctrl+Enter para guardar • Esc para cancelar',
+      locale: 'es-MX'
     },
     clients: {
       title: 'Tus Deudores',
@@ -129,6 +140,18 @@ export const translations = {
         title: 'Desbloquea tus Superpoderes',
         subtitle: 'Deja de perseguir a la gente. Conviértete en el cobrador que todos respetan (y pagan a tiempo).'
       },
+      billingToggle: {
+        monthly: 'Mensual',
+        annual: 'Anual',
+        discount: '-16%'
+      },
+      period: {
+        month: '/mes',
+        year: '/año',
+        forever: '/ siempre'
+      },
+      saveMonths: '¡Ahorra 2 meses!',
+      savePercent: (plan: string) => `o $${plan === 'vip' ? '799' : '1,299'}/año (ahorra ~17%)`,
       plans: {
         basic: {
           name: 'Básico',
@@ -175,6 +198,10 @@ export const translations = {
           question: '¿Mis amigos sabrán que uso Pro?',
           answer: 'Solo si quieres. Los mensajes pueden ser anónimos o personalizados con tu estilo.'
         }
+      },
+      loginNotice: {
+        title: 'Inicia sesión para suscribirte',
+        description: 'Primero entra con tu cuenta de Google para conectar tu plan y activar tu suscripción.'
       }
     },
     paywall: {
@@ -198,7 +225,11 @@ export const translations = {
       price: '$3.99',
       period: '/mes',
       cta: 'Actualizar a Pro',
-      keepFree: 'Mantener versión gratuita'
+      keepFree: 'Mantener versión gratuita',
+      newMessagesIn: 'Nuevos mensajes disponibles en:',
+      cancelAnytime: 'Cancela cuando quieras',
+      comingSoon: '¡Gracias por tu interés! El pago se habilitará próximamente. Por ahora, vuelve mañana para más mensajes gratis.',
+      resetAtMidnight: 'Los mensajes gratuitos se reinician a medianoche'
     },
     humor: {
       title: '¿Qué tan picante?',
@@ -253,7 +284,10 @@ export const translations = {
       apiKey: 'Problema con la API key. Usando mensaje alternativo.',
       network: 'Sin conexión a internet. Usando mensaje local.',
       generateFailed: 'Error al generar mensaje. Intenta de nuevo.',
-      timeout: 'La IA tardó mucho en responder. Intenta de nuevo.'
+      timeout: 'La IA tardó mucho en responder. Intenta de nuevo.',
+      supabaseNotConfigured: 'Supabase no está configurado. Usando modo local.',
+      loginError: 'Error al iniciar sesión:',
+      logoutError: 'Error al cerrar sesión:'
     },
     tones: {
       free: 'Tonos Gratuitos',
@@ -488,10 +522,21 @@ export const translations = {
         spicy: 'Spicy'
       },
       weeklyActivity: 'Weekly activity',
+      weekDays: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
+      allCaughtUpTitle: 'All caught up!',
+      allCaughtUpDesc: 'No pending debts to collect. Generate a message and we\'ll remind you automatically.',
+      exportCSV: 'Export CSV',
+      copyMessage: 'Copy message',
+      copied: 'Copied!',
       edit: 'Edit',
       editSuccess: 'Message updated',
       editError: 'Error saving',
-      editPlaceholder: 'Write your custom message...'
+      editPlaceholder: 'Write your custom message...',
+      saving: 'Saving...',
+      save: 'Save',
+      cancel: 'Cancel',
+      keyboardShortcuts: 'Ctrl+Enter to save • Esc to cancel',
+      locale: 'en-US'
     },
     clients: {
       title: 'Your Debtors',
@@ -547,6 +592,18 @@ export const translations = {
         title: 'Unlock Your Superpowers',
         subtitle: 'Stop chasing people. Become the collector everyone respects (and pays on time).'
       },
+      billingToggle: {
+        monthly: 'Monthly',
+        annual: 'Annual',
+        discount: '-16%'
+      },
+      period: {
+        month: '/month',
+        year: '/year',
+        forever: '/ forever'
+      },
+      saveMonths: 'Save 2 months!',
+      savePercent: (plan: string) => `or $${plan === 'vip' ? '799' : '1,299'}/year (save ~17%)`,
       plans: {
         basic: {
           name: 'Basic',
@@ -593,6 +650,10 @@ export const translations = {
           question: 'Will my friends know I use Pro?',
           answer: 'Only if you want. Messages can be anonymous or customized with your style.'
         }
+      },
+      loginNotice: {
+        title: 'Sign in to subscribe',
+        description: 'First sign in with your Google account to connect your plan and activate your subscription.'
       }
     },
     paywall: {
@@ -616,7 +677,11 @@ export const translations = {
       price: '$3.99',
       period: '/month',
       cta: 'Upgrade to Pro',
-      keepFree: 'Keep free version'
+      keepFree: 'Keep free version',
+      newMessagesIn: 'New messages available in:',
+      cancelAnytime: 'Cancel anytime',
+      comingSoon: 'Thanks for your interest! Payment will be enabled soon. For now, come back tomorrow for more free messages.',
+      resetAtMidnight: 'Free messages reset at midnight'
     },
     humor: {
       title: 'How spicy?',
@@ -671,7 +736,10 @@ export const translations = {
       apiKey: 'API key issue. Using alternative message.',
       network: 'No internet connection. Using local message.',
       generateFailed: 'Failed to generate message. Try again.',
-      timeout: 'AI took too long to respond. Try again.'
+      timeout: 'AI took too long to respond. Try again.',
+      supabaseNotConfigured: 'Supabase not configured. Using local mode.',
+      loginError: 'Login error:',
+      logoutError: 'Logout error:'
     },
     tones: {
       free: 'Free Tones',

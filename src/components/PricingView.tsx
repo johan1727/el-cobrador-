@@ -92,12 +92,10 @@ export function PricingView({ open, onClose, isPro }: Props) {
                 </div>
                 <div>
                   <h3 className="text-base font-extrabold text-on-surface">
-                    {language === 'es' ? 'Inicia sesión para suscribirte' : 'Sign in to subscribe'}
+                    {t.pricing.loginNotice.title}
                   </h3>
                   <p className="mt-1 text-sm font-medium text-on-surface-variant">
-                    {language === 'es'
-                      ? 'Primero entra con tu cuenta de Google para conectar tu plan y activar tu suscripción.'
-                      : 'Sign in with your Google account first to connect your plan and activate your subscription.'}
+                    {t.pricing.loginNotice.description}
                   </p>
                 </div>
               </div>
@@ -122,7 +120,7 @@ export function PricingView({ open, onClose, isPro }: Props) {
                   : 'text-on-surface-variant hover:text-on-surface'
               }`}
             >
-              {language === 'es' ? 'Mensual' : 'Monthly'}
+              {t.pricing.billingToggle.monthly}
             </button>
             <button
               onClick={() => setIsAnnual(true)}
@@ -132,9 +130,9 @@ export function PricingView({ open, onClose, isPro }: Props) {
                   : 'text-on-surface-variant hover:text-on-surface'
               }`}
             >
-              {language === 'es' ? 'Anual' : 'Annual'}
+              {t.pricing.billingToggle.annual}
               <span className="text-xs bg-tertiary-container text-on-tertiary-container px-2 py-0.5 rounded-full">
-                -16%
+                {t.pricing.billingToggle.discount}
               </span>
             </button>
           </div>
@@ -184,17 +182,17 @@ export function PricingView({ open, onClose, isPro }: Props) {
                   </span>
                   <span className="text-on-surface-variant font-semibold">
                     {isAnnual && plan.key !== 'basic'
-                      ? (language === 'es' ? '/año' : '/year')
-                      : (language === 'es' ? '/mes' : '/month')}
+                      ? t.pricing.period.year
+                      : t.pricing.period.month}
                   </span>
                   {isAnnual && plan.key !== 'basic' && (
                     <p className="text-xs text-tertiary font-medium mt-1">
-                      {language === 'es' ? '¡Ahorra 2 meses!' : 'Save 2 months!'}
+                      {t.pricing.saveMonths}
                     </p>
                   )}
                   {!isAnnual && plan.key !== 'basic' && (
                     <p className="text-xs text-on-surface-variant/60 font-medium mt-1">
-                      {language === 'es' ? 'o $' + (plan.key === 'vip' ? '799' : '1,299') + '/año (ahorra ~17%)' : 'or $' + (plan.key === 'vip' ? '799' : '1,299') + '/year (save ~17%)'}
+                      {t.pricing.savePercent(plan.key)}
                     </p>
                   )}
                 </div>

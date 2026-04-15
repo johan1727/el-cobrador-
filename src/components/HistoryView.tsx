@@ -36,9 +36,7 @@ export function HistoryView({ onClose, onReuse, onNewMessage, isPro = false }: P
   const [editLoading, setEditLoading] = useState(false);
   const [editSuccess, setEditSuccess] = useState(false);
 
-  const weekDays = language === 'es'
-    ? ['LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB', 'DOM']
-    : ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+  const weekDays = t.history.weekDays;
 
   // Load from localStorage and sync with cloud
   useEffect(() => {
@@ -257,7 +255,7 @@ export function HistoryView({ onClose, onReuse, onNewMessage, isPro = false }: P
   };
 
   const handleClearAll = () => {
-    if (confirm(language === 'es' ? '¿Borrar todo el historial?' : 'Clear all history?')) {
+    if (confirm(t.history.confirmDeleteAll)) {
       setHistory([]);
       setTotalAmount(0);
       localStorage.removeItem('el-cobrador-history');
@@ -403,13 +401,10 @@ export function HistoryView({ onClose, onReuse, onNewMessage, isPro = false }: P
                       <span className="material-symbols-outlined text-4xl text-primary/30">check_circle</span>
                     </div>
                     <h3 className="text-lg font-bold text-on-surface mb-2">
-                      {language === 'es' ? '¡Todo al día!' : 'All caught up!'}
+                      {t.history.allCaughtUpTitle}
                     </h3>
                     <p className="text-sm max-w-xs">
-                      {language === 'es' 
-                        ? 'No tienes deudas pendientes por cobrar. Genera un mensaje y te recordaremos automáticamente.'
-                        : 'No pending debts to collect. Generate a message and we\'ll remind you automatically.'
-                      }
+                      {t.history.allCaughtUpDesc}
                     </p>
                   </div>
                 ) : (
@@ -439,7 +434,7 @@ export function HistoryView({ onClose, onReuse, onNewMessage, isPro = false }: P
                       <button
                         onClick={exportToCSV}
                         className="text-primary text-sm font-bold hover:opacity-80 transition-opacity flex items-center gap-1"
-                        title={language === 'es' ? 'Exportar CSV' : 'Export CSV'}
+                        title={t.history.exportCSV}
                       >
                         <span className="material-symbols-outlined text-sm">download</span>
                         CSV
@@ -528,7 +523,7 @@ export function HistoryView({ onClose, onReuse, onNewMessage, isPro = false }: P
                         <div className="min-w-0">
                           <h4 className="font-bold text-on-surface truncate">{item.debt.debtor}</h4>
                           <p className="text-xs text-on-surface-variant">
-                            {new Date(item.message.timestamp).toLocaleDateString(language === 'es' ? 'es-MX' : 'en-US', {
+                            {new Date(item.message.timestamp).toLocaleDateString(t.history.locale, {
                               day: 'numeric',
                               month: 'short',
                               hour: '2-digit',
@@ -577,7 +572,7 @@ export function HistoryView({ onClose, onReuse, onNewMessage, isPro = false }: P
                                 ? 'text-primary bg-primary/10'
                                 : 'text-on-surface-variant hover:bg-surface-container-high hover:text-primary'
                             }`}
-                            title={copiedId === item.id ? (language === 'es' ? '¡Copiado!' : 'Copied!') : (language === 'es' ? 'Copiar mensaje' : 'Copy message')}
+                            title={copiedId === item.id ? t.history.copied : t.history.copyMessage}
                           >
                             <span className="material-symbols-outlined text-lg">
                               {copiedId === item.id ? 'check_circle' : 'content_copy'}

@@ -39,7 +39,7 @@ export function SettingsView({ onClose, isPro, onUpgrade }: Props) {
 
   const handleLogin = async () => {
     if (!isConfigured) {
-      alert(language === 'es' ? 'Supabase no está configurado. Usando modo local.' : 'Supabase not configured. Using local mode.');
+      alert(t.error.supabaseNotConfigured);
       return;
     }
 
@@ -49,7 +49,7 @@ export function SettingsView({ onClose, isPro, onUpgrade }: Props) {
 
       if (error) {
         console.error('Login error:', error);
-        alert((language === 'es' ? 'Error al iniciar sesión: ' : 'Login error: ') + error.message);
+        alert(t.error.loginError + ' ' + error.message);
       }
     } finally {
       setLoginLoading(false);
@@ -63,7 +63,7 @@ export function SettingsView({ onClose, isPro, onUpgrade }: Props) {
 
       if (error) {
         console.error('Logout error:', error);
-        alert((language === 'es' ? 'Error al cerrar sesión: ' : 'Logout error: ') + error.message);
+        alert(t.error.logoutError + ' ' + error.message);
       }
     } finally {
       setLogoutLoading(false);

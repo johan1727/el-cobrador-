@@ -79,7 +79,7 @@ export function PaywallModal({
               <div className="flex items-center gap-3">
                 <span className="material-symbols-outlined text-primary">schedule</span>
                 <div>
-                  <p className="text-sm text-on-surface-variant">{language === 'es' ? 'Nuevos mensajes disponibles en:' : 'New messages available in:'}</p>
+                  <p className="text-sm text-on-surface-variant">{t.paywall.newMessagesIn}</p>
                   <p className="text-xl font-bold text-primary">
                     {timeUntilReset.hours}h {timeUntilReset.minutes}m
                   </p>
@@ -126,14 +126,11 @@ export function PaywallModal({
                 <span className="text-4xl font-extrabold text-primary">$3.99</span>
                 <span className="text-on-surface-variant font-medium">{t.paywall.period}</span>
               </div>
-              <p className="text-xs text-on-surface-variant mt-1 font-semibold tracking-wide uppercase">{language === 'es' ? 'Cancela cuando quieras' : 'Cancel anytime'}</p>
+              <p className="text-xs text-on-surface-variant mt-1 font-semibold tracking-wide uppercase">{t.paywall.cancelAnytime}</p>
             </div>
             <button
               onClick={() => {
-                alert(language === 'es' 
-                  ? '¡Gracias por tu interés! El pago se habilitará próximamente. Por ahora, vuelve mañana para más mensajes gratis.'
-                  : 'Thanks for your interest! Payment will be enabled soon. For now, come back tomorrow for more free messages.'
-                );
+                alert(t.paywall.comingSoon);
               }}
               className="w-full py-5 rounded-full bg-gradient-to-r from-primary to-primary-container text-white text-lg font-extrabold shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-95 transition-all flex items-center justify-center gap-3"
             >
@@ -148,10 +145,7 @@ export function PaywallModal({
                 {t.paywall.keepFree}
               </button>
               <p className="text-xs text-on-surface-variant/60">
-                {language === 'es' 
-                  ? 'Los mensajes gratuitos se reinician a medianoche'
-                  : 'Free messages reset at midnight'
-                }
+                {t.paywall.resetAtMidnight}
               </p>
             </div>
           </div>
