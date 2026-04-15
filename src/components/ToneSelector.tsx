@@ -14,6 +14,37 @@ export function ToneSelector({ tones, selected, onSelect, loading, isPro = false
   const { t } = useTranslation();
   const blobClasses = ['blob-1', 'blob-2', 'blob-3', 'blob-4'];
 
+  // Helper para obtener traducción de tono de forma type-safe
+  const getToneTranslation = (toneId: string) => {
+    const toneTranslations: Record<string, { name: string; tagline: string }> = {
+      corporativo: t.tones.corporativo,
+      mafioso: t.tones.mafioso,
+      dramatico: t.tones.dramatico,
+      poeta: t.tones.poeta,
+      nerdy: t.tones.nerdy,
+      yogi: t.tones.yogi,
+      abuela: t.tones.abuela,
+      abogado: t.tones.abogado,
+      chef: t.tones.chef,
+      influencer: t.tones.influencer,
+      motivacional: t.tones.motivacional,
+      alien: t.tones.alien,
+      profesor: t.tones.profesor,
+      coach: t.tones.coach,
+      abogado_chicano: t.tones.abogado_chicano,
+      asmr: t.tones.asmr,
+      chaman: t.tones.chaman,
+      fitness: t.tones.fitness,
+      chef_pesado: t.tones.chef_pesado,
+      politico: t.tones.politico,
+      rapero: t.tones.rapero,
+      abuela_sabia: t.tones.abuela_sabia,
+      ia: t.tones.ia,
+      narcotelenovela: t.tones.narcotelenovela,
+    };
+    return toneTranslations[toneId];
+  };
+
   const localImages = [
     'corporativo', 'mafioso', 'dramatico', 'poeta', 'nerdy', 'yogi', 
     'abuela', 'abogado', 'chef', 'influencer', 'motivacional', 'alien',
@@ -86,10 +117,10 @@ export function ToneSelector({ tones, selected, onSelect, loading, isPro = false
               </div>
               
               <h3 className="font-headline font-bold text-lg tracking-tight leading-none mb-1 text-primary">
-                {tone.name.toUpperCase()}
+                {(getToneTranslation(tone.id)?.name || tone.name).toUpperCase()}
               </h3>
               <p className="font-body italic text-xs text-on-surface-variant">
-                "{tone.tagline}"
+                "{getToneTranslation(tone.id)?.tagline || tone.tagline}"
               </p>
             </button>
           );
@@ -176,12 +207,12 @@ export function ToneSelector({ tones, selected, onSelect, loading, isPro = false
               <h3 className={`font-headline font-bold text-lg tracking-tight leading-none mb-1 ${
                 isLocked ? 'text-on-surface-variant' : 'text-primary'
               }`}>
-                {tone.name.toUpperCase()}
+                {(getToneTranslation(tone.id)?.name || tone.name).toUpperCase()}
               </h3>
               <p className={`font-body italic text-xs ${
                 isLocked ? 'text-on-surface-variant/50' : 'text-on-surface-variant'
               }`}>
-                "{tone.tagline}"
+                "{getToneTranslation(tone.id)?.tagline || tone.tagline}"
               </p>
             </button>
           );

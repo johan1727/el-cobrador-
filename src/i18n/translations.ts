@@ -240,7 +240,11 @@ export const translations = {
       yesPaid: 'Sí, pagó',
       notYet: 'Todavía no',
       markForgiven: 'Perdonar deuda',
-      pendingCount: (count: number) => `${count} deudas pendientes`
+      pendingCount: (count: number) => `${count} deudas pendientes`,
+      daysAgo: (days: number) => `Hace ${days} días`,
+      daysAgoShort: (days: number) => `${days} days ago`,
+      paidQuestion: (name: string, amount: number, currency: string) => `¿${name} ya te pagó los ${currency === 'MXN' ? '$' : 'USD '}${amount}?`,
+      paidQuestionEn: (name: string, amount: number, currency: string) => `Has ${name} paid you ${currency === 'MXN' ? '$' : 'USD '}${amount}?`
     },
     error: {
       title: 'Error',
@@ -654,7 +658,11 @@ export const translations = {
       yesPaid: 'Yes, paid',
       notYet: 'Not yet',
       markForgiven: 'Forgive debt',
-      pendingCount: (count: number) => `${count} pending debts`
+      pendingCount: (count: number) => `${count} pending debts`,
+      daysAgo: (days: number) => `${days} days ago`,
+      daysAgoShort: (days: number) => `${days} days ago`,
+      paidQuestion: (name: string, amount: number, currency: string) => `Has ${name} paid you ${currency === 'MXN' ? '$' : 'USD '}${amount}?`,
+      paidQuestionEn: (name: string, amount: number, currency: string) => `Has ${name} paid you ${currency === 'MXN' ? '$' : 'USD '}${amount}?`
     },
     error: {
       title: 'Error',

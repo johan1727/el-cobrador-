@@ -58,7 +58,7 @@ function AppContent() {
   const { playGenerate, playCopy, playShare, playFlip, playClick } = useSound();
   const { user, loading: authLoading } = useAuth();
   const { isPro: isProSubscription } = useSubscription(user?.id || null);
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   
   // Usar isPro de useUsageLimit o de useSubscription
   const isProUser = isPro || isProSubscription;
@@ -81,7 +81,7 @@ function AppContent() {
       return;
     }
 
-    const result = await generateMessage(debt, tone, level, user?.id);
+    const result = await generateMessage(debt, tone, level, user?.id, language);
     if (result) {
       setMessage(result);
       incrementUsage();
@@ -147,7 +147,7 @@ function AppContent() {
               className="w-full h-full object-cover"
             />
           </div>
-          <h1 className="font-headline font-black tracking-tight text-2xl text-primary">El Cobrador</h1>
+          <h1 className="font-headline font-black tracking-tight text-2xl text-primary">{t.common.appName}</h1>
         </div>
         <div className="flex items-center gap-3">
           {/* Login button - show when not authenticated */}

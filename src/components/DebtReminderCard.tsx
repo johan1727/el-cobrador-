@@ -46,7 +46,7 @@ export function DebtReminderCard({ reminder, onMarkPaid, onMarkForgiven, onSnooz
           <span className="text-3xl">{emoji}</span>
           <div>
             <p className="text-xs font-bold uppercase tracking-wider opacity-70">
-              {title} • {language === 'es' ? `Hace ${reminder.daysElapsed} días` : `${reminder.daysElapsed} days ago`}
+              {title} • {language === 'es' ? t.reminders.daysAgo(reminder.daysElapsed) : t.reminders.daysAgoShort(reminder.daysElapsed)}
             </p>
             <h4 className="font-headline font-bold text-lg text-on-surface">
               {reminder.debtor_name} • ${reminder.amount.toLocaleString()} {reminder.currency}
@@ -56,9 +56,9 @@ export function DebtReminderCard({ reminder, onMarkPaid, onMarkForgiven, onSnooz
 
         {/* Question */}
         <p className="text-on-surface-variant font-medium mb-4 text-sm">
-          {language === 'es' 
-            ? `¿${reminder.debtor_name} ya te pagó los $${reminder.amount}?`
-            : `Has ${reminder.debtor_name} paid you $${reminder.amount}?`
+          {language === 'es'
+            ? t.reminders.paidQuestion(reminder.debtor_name, reminder.amount, reminder.currency)
+            : t.reminders.paidQuestionEn(reminder.debtor_name, reminder.amount, reminder.currency)
           }
         </p>
 
