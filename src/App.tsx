@@ -9,6 +9,7 @@ import { ClientsView } from './components/ClientsView';
 import { SettingsView } from './components/SettingsView';
 import { PricingView } from './components/PricingView';
 import { useGemini } from './hooks/useGemini';
+import { useHistorySync } from './hooks/useHistorySync';
 import { useUsageLimit } from './hooks/useUsageLimit';
 import { useSound } from './hooks/useSound';
 import { AuthProvider, useAuth } from './hooks/useAuth';
@@ -48,6 +49,14 @@ function AppContent() {
 
   const { generateMessage, loading, error } = useGemini();
   const { 
+    saveMessage,
+    updateMessage,
+    deleteMessage,
+    syncCloudToLocal,
+    history: syncHistory,
+    lastSynced
+  } = useHistorySync({ userId: user?.id || null, isAuthenticated: !!user });
+  const { 
     canGenerate, 
     incrementUsage, 
     isPro,
@@ -84,6 +93,8 @@ function AppContent() {
     const result = await generateMessage(debt, tone, level, user?.id, language);
     if (result) {
       setMessage(result);
+      // Also save via useHistorySync for unified sync tracking
+      await saveMessage(debt, tone, level, result.text);
       incrementUsage();
       playGenerate();
       setView('preview');

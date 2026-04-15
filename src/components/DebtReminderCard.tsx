@@ -82,20 +82,20 @@ export function DebtReminderCard({ reminder, onMarkPaid, onMarkForgiven, onSnooz
         ) : (
           <div className="space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
             <p className="text-xs text-on-surface-variant font-medium text-center">
-              {language === 'es' ? '¿Qué quieres hacer?' : 'What do you want to do?'}
+              {t.reminders.whatToDo}
             </p>
             <div className="flex gap-2">
               <button
                 onClick={() => onSnooze(3)}
                 className="flex-1 py-2 px-3 rounded-full bg-surface-container-high text-on-surface-variant font-semibold text-xs hover:bg-surface-container transition-all"
               >
-                +3 {language === 'es' ? 'días' : 'days'}
+                {t.reminders.snooze(3)}
               </button>
               <button
                 onClick={() => onSnooze(7)}
                 className="flex-1 py-2 px-3 rounded-full bg-surface-container-high text-on-surface-variant font-semibold text-xs hover:bg-surface-container transition-all"
               >
-                +7 {language === 'es' ? 'días' : 'days'}
+                {t.reminders.snooze(7)}
               </button>
             </div>
             <button

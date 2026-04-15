@@ -275,7 +275,10 @@ export const translations = {
       daysAgo: (days: number) => `Hace ${days} días`,
       daysAgoShort: (days: number) => `${days} days ago`,
       paidQuestion: (name: string, amount: number, currency: string) => `¿${name} ya te pagó los ${currency === 'MXN' ? '$' : 'USD '}${amount}?`,
-      paidQuestionEn: (name: string, amount: number, currency: string) => `Has ${name} paid you ${currency === 'MXN' ? '$' : 'USD '}${amount}?`
+      paidQuestionEn: (name: string, amount: number, currency: string) => `Has ${name} paid you ${currency === 'MXN' ? '$' : 'USD '}${amount}?`,
+      whatToDo: '¿Qué quieres hacer?',
+      days: 'días',
+      snooze: (days: number) => `+${days} días`
     },
     error: {
       title: 'Error',
@@ -727,7 +730,10 @@ export const translations = {
       daysAgo: (days: number) => `${days} days ago`,
       daysAgoShort: (days: number) => `${days} days ago`,
       paidQuestion: (name: string, amount: number, currency: string) => `Has ${name} paid you ${currency === 'MXN' ? '$' : 'USD '}${amount}?`,
-      paidQuestionEn: (name: string, amount: number, currency: string) => `Has ${name} paid you ${currency === 'MXN' ? '$' : 'USD '}${amount}?`
+      paidQuestionEn: (name: string, amount: number, currency: string) => `Has ${name} paid you ${currency === 'MXN' ? '$' : 'USD '}${amount}?`,
+      whatToDo: 'What do you want to do?',
+      days: 'days',
+      snooze: (days: number) => `+${days} days`
     },
     error: {
       title: 'Error',
